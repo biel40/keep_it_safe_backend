@@ -1,11 +1,10 @@
-package com.esliceu.keep_it_safe;
+package com.esliceu.keep_it_safe.entities;
 
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "User")
 public class User {
     @Id
     private String DNI_NIE;
@@ -22,4 +21,5 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Invoice> invoices;
+
 }

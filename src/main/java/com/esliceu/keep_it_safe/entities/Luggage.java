@@ -1,10 +1,10 @@
-package com.esliceu.keep_it_safe;
+package com.esliceu.keep_it_safe.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "Luggage")
 public class Luggage {
     @Id
     private String luggage_type;
@@ -21,6 +21,6 @@ public class Luggage {
     @Column(nullable = false)
     private double deep_dimension;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "luggages")
     private Set<Invoice> invoices;
 }
