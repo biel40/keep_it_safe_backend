@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class KeepItSafeApplication {
+
     @Autowired
     MockDatabase mockDatabase;
 
