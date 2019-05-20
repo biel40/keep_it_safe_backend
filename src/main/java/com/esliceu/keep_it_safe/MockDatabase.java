@@ -11,11 +11,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
+
 
 @Component
 public class MockDatabase {
+
     private UserRepository userRepository;
     private LuggageRepository luggageRepository;
     private InvoiceRepository invoiceRepository;
@@ -78,5 +78,6 @@ public class MockDatabase {
 
         invoice_1.setEnd_date(Instant.now());
         invoiceRepository.save(invoice_1);
+
     }
 }

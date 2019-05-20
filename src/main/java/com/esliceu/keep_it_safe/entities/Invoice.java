@@ -8,6 +8,7 @@ import java.util.Set;
 
 @Entity
 public class Invoice {
+
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

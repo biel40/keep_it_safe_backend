@@ -12,7 +12,7 @@
     <artifactId>keep_it_safe</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>keep_it_safe</name>
-    <description>Demo project for Spring Boot</description>
+    <description> Backend Project of Keep it Safe App </description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -79,6 +79,19 @@
             <groupId>org.springframework.social</groupId>
             <artifactId>spring-social-core</artifactId>
             <version>1.1.6.RELEASE</version>
+        </dependency>
+
+        <!-- Spring Social Facebook -->
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-facebook</artifactId>
+            <version>2.0.3.RELEASE</version>
+        </dependency>
+
+        <!-- thymeleaf -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
     </dependencies>

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class BeansConfiguration {
+
     @Bean
     @Scope("prototype")
     public User user(){ return new User();}

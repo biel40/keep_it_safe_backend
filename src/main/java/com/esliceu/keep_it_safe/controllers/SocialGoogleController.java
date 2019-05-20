@@ -1,15 +1,13 @@
 package com.esliceu.keep_it_safe.controllers;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 
@@ -20,20 +18,18 @@ public class SocialGoogleController {
 
     private String secretId = "iP00UFVzF52QSOitDauiRvDS";
 
-    private GoogleConnectionFactory googleConnectionFactory = new GoogleConnectionFactory(clientId, secretId);
+    private GoogleConnectionFactory factory = new GoogleConnectionFactory(clientId, secretId);
 
-
-    @GetMapping(value = "/useApp")
+    @RequestMapping( value = "/loginGoogle", method = RequestMethod.POST)
     public String useApp() {
 
-        OAuth2Operations operations = googleConnectionFactory.getOAuthOperations();
+        OAuth2Operations operations = factory.getOAuthOperations();
+        OAuth2Parameters params = new OAuth2Parameters();
 
-        OAuth2Parameters oAuth2Parameters = new OAuth2Parameters();
+        params.setRedirectUri("http://localhost:8082/forwardLoginGoogle");
+        params.setScope("email profile openid");
 
-        oAuth2Parameters.setRedirectUri("http://localhost:8082/forwardLogin");
-        oAuth2Parameters.setScope("email profile openid");
-
-        String url = operations.buildAuthenticateUrl(oAuth2Parameters);
+        String url = operations.buildAuthenticateUrl(params);
 
         System.out.println("The URL is: " + url);
 
@@ -41,23 +37,23 @@ public class SocialGoogleController {
 
     }
 
-    @RequestMapping(value = "/forwardLogin")
+    @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET )
     public RedirectView forward(@RequestParam("code")
-                                        String authorizationCode) {
+                                String authorizationCode) {
 
-        /* Estudiar que hacen estas líneas */
 
-        OAuth2Operations operations = googleConnectionFactory.getOAuthOperations();
-        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8082/forwardLogin", null);
-        Connection<Google> connection = googleConnectionFactory.createConnection(accessToken);
+        OAuth2Operations operations = factory.getOAuthOperations();
+
+        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8082/forwardLoginGoogle", null);
+        Connection<Google> connection = factory.createConnection(accessToken);
 
         Google googleConnection = connection.getApi();
 
-        // Checks if the Google Connection has been succesfully achieved.
+
         if (googleConnection != null) {
             return new RedirectView("http://localhost:8080/#/");
         } else {
-            return new RedirectView("http://localhost:8082/useApp");
+            return new RedirectView("http://localhost:8082/loginGoogle");
         }
 
     }
