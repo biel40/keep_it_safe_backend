@@ -31,9 +31,10 @@ public class SocialGoogleController {
 
         String url = operations.buildAuthenticateUrl(params);
 
+
         System.out.println("The URL is: " + url);
 
-        return "redirect:" + url;
+        return url;
 
     }
 
@@ -48,6 +49,8 @@ public class SocialGoogleController {
         Connection<Google> connection = factory.createConnection(accessToken);
 
         Google googleConnection = connection.getApi();
+
+        System.out.println(googleConnection.getAccessToken());
 
 
         if (googleConnection != null) {

@@ -27,14 +27,14 @@ public class SocialFacebookController {
         OAuth2Operations operations = facebookConnectionFactory.getOAuthOperations();
         OAuth2Parameters params = new OAuth2Parameters();
 
-        params.setRedirectUri("http://localhost:8082/forwardLoginFacebook");
+        params.setRedirectUri("http://localhost:8081/forwardLoginFacebook");
         params.setScope("email, public_profile");
 
         String url = operations.buildAuthenticateUrl(params);
 
         System.out.println(url);
 
-        return "redirect:" + url;
+        return url;
 
     }
 
