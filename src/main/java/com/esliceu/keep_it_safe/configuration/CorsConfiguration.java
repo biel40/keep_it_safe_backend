@@ -12,7 +12,8 @@ public class CorsConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry){
-        corsRegistry.addMapping("/**");
+        // corsRegistry.addMapping("/**");
+        corsRegistry.addMapping("http://localhost:8080");
     }
 
 }
