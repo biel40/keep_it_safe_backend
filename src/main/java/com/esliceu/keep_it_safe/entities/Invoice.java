@@ -28,10 +28,8 @@ public class Invoice {
     @Column(nullable = false)
     private boolean isVerified;
 
-    @ManyToMany
-    @JoinTable(name = "invoice_luggage",
-            joinColumns = @JoinColumn(name = "invoice_id"),
-            inverseJoinColumns = @JoinColumn(name = "luggage_id"))
+
+    @OneToMany(mappedBy = "invoice")
     private Set<Luggage> luggages;
 
 

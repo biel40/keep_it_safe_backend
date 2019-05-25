@@ -24,8 +24,8 @@ public class Luggage {
     @Column(nullable = false)
     private double deep_dimension;
 
-    @ManyToMany(mappedBy = "luggages")
-    private Set<Invoice> invoices;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Invoice invoice;
 
     public LuggageType getLuggage_type() {
         return luggage_type;
@@ -67,11 +67,11 @@ public class Luggage {
         this.deep_dimension = deep_dimension;
     }
 
-    public Set<Invoice> getInvoices() {
-        return invoices;
+    public Invoice getInvoice() {
+        return invoice;
     }
 
-    public void setInvoices(Set<Invoice> invoices) {
-        this.invoices = invoices;
+    public void setInvoice(Set<Invoice> invoices) {
+        this.invoice = invoice;
     }
 }

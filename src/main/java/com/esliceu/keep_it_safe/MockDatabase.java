@@ -37,13 +37,14 @@ public class MockDatabase {
         user_1.setSecond_surname("CCCCCC");
         user_1.setPassword("*******");
         user_1.setEmail("usuario1@gmail.com");
+        user_1.setRol_user(RolUser.EMPLOYEE);
         userRepository.save(user_1);
 
         User user_2 = context.getBean(User.class);
         user_2.setDNI_NIE("123456789B");
         user_2.setName("ZZZZZ");
         user_2.setFirst_surname("XXXXX");
-
+        user_2.setRol_user(RolUser.CLIENT);
         user_2.setPassword("*******");
         user_2.setEmail("usuario2@gmail.com");
         userRepository.save(user_2);
