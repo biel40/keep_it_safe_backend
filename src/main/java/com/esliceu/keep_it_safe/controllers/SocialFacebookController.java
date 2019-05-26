@@ -44,7 +44,7 @@ public class SocialFacebookController {
 
 
         OAuth2Operations operations = facebookConnectionFactory.getOAuthOperations();
-        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8082/forwardLoginFacebook", null);
+        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginFacebook", null);
 
         Connection<Facebook> connection = facebookConnectionFactory.createConnection(accessToken);
 
@@ -55,7 +55,7 @@ public class SocialFacebookController {
         if (facebookConnection != null) {
             return new RedirectView("http://localhost:8080/#/");
         } else {
-            return new RedirectView("http://localhost:8082/useAppFacebook");
+            return new RedirectView("http://localhost:8081/loginFacebook");
         }
 
     }

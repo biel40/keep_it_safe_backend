@@ -26,11 +26,10 @@ public class SocialGoogleController {
         OAuth2Operations operations = factory.getOAuthOperations();
         OAuth2Parameters params = new OAuth2Parameters();
 
-        params.setRedirectUri("http://localhost:8082/forwardLoginGoogle");
+        params.setRedirectUri("http://localhost:8081/forwardLoginGoogle");
         params.setScope("email profile openid");
 
         String url = operations.buildAuthenticateUrl(params);
-
 
         System.out.println("The URL is: " + url);
 
@@ -45,7 +44,7 @@ public class SocialGoogleController {
 
         OAuth2Operations operations = factory.getOAuthOperations();
 
-        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8082/forwardLoginGoogle", null);
+        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
         Connection<Google> connection = factory.createConnection(accessToken);
 
         Google googleConnection = connection.getApi();
@@ -56,7 +55,7 @@ public class SocialGoogleController {
         if (googleConnection != null) {
             return new RedirectView("http://localhost:8080/#/");
         } else {
-            return new RedirectView("http://localhost:8082/loginGoogle");
+            return new RedirectView("http://localhost:8081/loginGoogle");
         }
 
     }

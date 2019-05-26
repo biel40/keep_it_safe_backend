@@ -1,7 +1,6 @@
 package com.esliceu.keep_it_safe.entities;
 
 
-import com.esliceu.keep_it_safe.LuggageType;
 import com.esliceu.keep_it_safe.RolUser;
 
 import javax.persistence.*;
@@ -9,13 +8,11 @@ import java.util.Set;
 
 @Entity
 public class User {
+
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long user_id;
-
-    @Column(unique = true)
-    private String DNI_NIE;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -37,14 +34,6 @@ public class User {
     public long getUser_id() { return user_id; }
 
     public void setUser_id(long user_id) { this.user_id = user_id; }
-
-    public String getDNI_NIE() {
-        return DNI_NIE;
-    }
-
-    public void setDNI_NIE(String DNI_NIE) {
-        this.DNI_NIE = DNI_NIE;
-    }
 
     public String getEmail() {
         return email;
@@ -98,5 +87,9 @@ public class User {
         this.invoices = invoices;
     }
 
+    @Override
+    public String toString() {
+        return this.getEmail() + " " + this.getName() + " " + this.getFirst_surname() + " " + this.getSecond_surname() + " " + this.getRol_user() ;
+    }
 
 }

@@ -30,8 +30,8 @@ public class MockDatabase {
     }
 
     public void createDatabaseMock(){
+
         User user_1 = context.getBean(User.class);
-        user_1.setDNI_NIE("123456789A");
         user_1.setName("AAAAA");
         user_1.setFirst_surname("BBBBB");
         user_1.setSecond_surname("CCCCCC");
@@ -41,13 +41,22 @@ public class MockDatabase {
         userRepository.save(user_1);
 
         User user_2 = context.getBean(User.class);
-        user_2.setDNI_NIE("123456789B");
         user_2.setName("ZZZZZ");
         user_2.setFirst_surname("XXXXX");
         user_2.setRol_user(RolUser.CLIENT);
         user_2.setPassword("*******");
         user_2.setEmail("usuario2@gmail.com");
         userRepository.save(user_2);
+
+        User biel = context.getBean(User.class);
+        biel.setName("Biel");
+        biel.setFirst_surname("Borras");
+        biel.setRol_user(RolUser.CLIENT);
+        biel.setPassword("biel");
+        biel.setEmail("bielet40@gmail.com");
+        userRepository.save(biel);
+
+
 
         Luggage smallLuggage = context.getBean(Luggage.class);
         smallLuggage.setLuggage_type(LuggageType.SMALL);

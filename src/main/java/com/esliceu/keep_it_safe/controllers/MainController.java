@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 public class MainController {
+
     private final LuggageRepository luggageRepository;
     private final UserRepository userRepository;
 
@@ -23,13 +24,13 @@ public class MainController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/lugagage", method = RequestMethod.GET)
+    @RequestMapping(value = "/luggage", method = RequestMethod.GET)
     public List<Luggage> getLuggages() {
         return (List<Luggage>) this.luggageRepository.findAll();
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
 
+    @RequestMapping(value = "/user", method = RequestMethod.POST)
     public ResponseEntity foo(@RequestBody User user) {
         try {
             userRepository.save(user);
