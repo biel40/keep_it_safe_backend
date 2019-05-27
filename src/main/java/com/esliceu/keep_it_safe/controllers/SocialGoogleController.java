@@ -1,6 +1,8 @@
 package com.esliceu.keep_it_safe.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
@@ -38,7 +40,7 @@ public class SocialGoogleController {
     }
 
     @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET )
-    public RedirectView forward(@RequestParam("code")
+    public ResponseEntity forward(@RequestParam("code")
                                 String authorizationCode) {
 
 
@@ -51,12 +53,12 @@ public class SocialGoogleController {
 
         System.out.println(googleConnection.getAccessToken());
 
-
-        if (googleConnection != null) {
-            return new RedirectView("http://localhost:8080/#/");
+        if (googleConnection.isAuthorized()) {
+            return new ResponseEntity(googleConnection.getAccessToken(), HttpStatus.OK);
         } else {
-            return new RedirectView("http://localhost:8081/loginGoogle");
+            return new ResponseEntity(googleConnection.getAccessToken(), HttpStatus.UNAUTHORIZED);
         }
+
 
     }
 

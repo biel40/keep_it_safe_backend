@@ -1,6 +1,8 @@
 package com.esliceu.keep_it_safe.controllers;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
@@ -39,7 +41,7 @@ public class SocialFacebookController {
     }
 
     @RequestMapping(value = "/forwardLoginFacebook", method = RequestMethod.GET)
-    public RedirectView forward(@RequestParam("code")
+    public ResponseEntity forward(@RequestParam("code")
                                 String authorizationCode) {
 
 
@@ -52,10 +54,10 @@ public class SocialFacebookController {
 
         System.out.println(accessToken.getAccessToken());
 
-        if (facebookConnection != null) {
-            return new RedirectView("http://localhost:8080/#/");
+        if (facebookConnection.isAuthorized()) {
+            return new ResponseEntity(accessToken.getAccessToken(), HttpStatus.OK);
         } else {
-            return new RedirectView("http://localhost:8081/loginFacebook");
+            return new ResponseEntity(accessToken.getAccessToken(), HttpStatus.UNAUTHORIZED);
         }
 
     }
