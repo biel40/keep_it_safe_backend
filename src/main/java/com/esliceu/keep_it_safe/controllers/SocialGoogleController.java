@@ -21,7 +21,7 @@ public class SocialGoogleController {
     private GoogleConnectionFactory factory = new GoogleConnectionFactory(clientId, secretId);
 
     @RequestMapping( value = "/loginGoogle", method = RequestMethod.POST)
-    public String useApp() {
+    public RedirectView useAppGoogle() {
 
         OAuth2Operations operations = factory.getOAuthOperations();
         OAuth2Parameters params = new OAuth2Parameters();
@@ -33,7 +33,7 @@ public class SocialGoogleController {
 
         System.out.println("The URL is: " + url);
 
-        return url;
+        return new RedirectView(url);
 
     }
 

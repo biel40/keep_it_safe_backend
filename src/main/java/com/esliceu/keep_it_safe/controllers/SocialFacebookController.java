@@ -22,7 +22,7 @@ public class SocialFacebookController {
     private FacebookConnectionFactory facebookConnectionFactory = new FacebookConnectionFactory(clientId, secretId);
 
     @RequestMapping(value = "/loginFacebook", method = RequestMethod.POST)
-    public String useAppFacebook() {
+    public RedirectView useAppFacebook() {
 
         OAuth2Operations operations = facebookConnectionFactory.getOAuthOperations();
         OAuth2Parameters params = new OAuth2Parameters();
@@ -34,7 +34,7 @@ public class SocialFacebookController {
 
         System.out.println(url);
 
-        return url;
+        return new RedirectView(url);
 
     }
 
