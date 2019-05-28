@@ -28,7 +28,6 @@ public class Invoice {
     @Column(nullable = false)
     private boolean isVerified;
 
-
     @OneToMany(mappedBy = "invoice")
     private Set<Luggage> luggages;
 

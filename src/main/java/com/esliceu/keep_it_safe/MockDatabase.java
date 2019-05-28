@@ -57,7 +57,6 @@ public class MockDatabase {
         userRepository.save(biel);
 
 
-
         Luggage smallLuggage = context.getBean(Luggage.class);
         smallLuggage.setLuggage_type(LuggageType.SMALL);
         smallLuggage.setPrice(4.20);
@@ -85,9 +84,16 @@ public class MockDatabase {
         Invoice invoice_1 = context.getBean(Invoice.class);
         invoice_1.setTotal_price(50);
         invoice_1.setStart_date(Instant.now());
-
         invoice_1.setEnd_date(Instant.now());
         invoiceRepository.save(invoice_1);
+
+        Invoice invoice_2 = context.getBean(Invoice.class);
+        invoice_2.setTotal_price(60);
+        invoice_2.setStart_date(Instant.now());
+        invoice_2.setEnd_date(Instant.now());
+        invoiceRepository.save(invoice_2);
+        invoice_2.setUser(biel);
+        invoiceRepository.save(invoice_2);
 
     }
 }
