@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class SocialGoogleController {
 
-    private String clientId = "654562017313-c2j3vnt9i253slup3f2mtmnoeutj4jdd.apps.googleusercontent.com";
+    private String clientId = "637594007727-3o8tnk0vhafhh7o0p3hk5tib3q5rudk6.apps.googleusercontent.com";
 
-    private String secretId = "iP00UFVzF52QSOitDauiRvDS";
+    private String secretId = "kgEDC-HtqsjxQZi6Jv-kYivr";
 
     private GoogleConnectionFactory factory = new GoogleConnectionFactory(clientId, secretId);
 
@@ -44,11 +44,8 @@ public class SocialGoogleController {
     public RedirectView forward(@RequestParam("code")
                                 String authorizationCode, HttpServletResponse response) {
 
-
-
         OAuth2Operations operations = factory.getOAuthOperations();
 
-        
         AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
         Connection<Google> connection = factory.createConnection(accessToken);
 
@@ -57,10 +54,10 @@ public class SocialGoogleController {
         System.out.println(googleConnection.getAccessToken());
 
         if (googleConnection.isAuthorized()) {
-            response.setHeader("hola", googleConnection.getAccessToken());
-
+            response.setHeader("Authorisation","Bearer " + googleConnection.getAccessToken());
             RedirectView redirectView = new RedirectView("http://localhost:8080");
             redirectView.setPropagateQueryParams(true);
+
             return redirectView;
         } else {
             return new RedirectView("http://localhost:8080");
