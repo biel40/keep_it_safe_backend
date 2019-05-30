@@ -1,6 +1,5 @@
 package com.esliceu.keep_it_safe.controllers;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.Connection;
@@ -46,6 +45,7 @@ public class SocialGoogleController {
 
         OAuth2Operations operations = factory.getOAuthOperations();
 
+        
         AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
         Connection<Google> connection = factory.createConnection(accessToken);
 

@@ -10,12 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.filter.OncePerRequestFilter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
-
+@WebFilter
 public class TokenFilter extends OncePerRequestFilter {
 
     private final String HEADER_AUTHORIZATION = "Authorization";
@@ -38,8 +39,8 @@ public class TokenFilter extends OncePerRequestFilter {
                 request.setAttribute("claims", claims);
 
                 // Añadir media hora más al Token.
-                // TODO: Solucionar que es lo que tengo que hacer aquí.
                 String tokenRefreshed = increaseExpiracyDate(request);
+
             }
 
             chain.doFilter(request, response);

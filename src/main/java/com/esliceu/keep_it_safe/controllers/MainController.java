@@ -65,9 +65,7 @@ public class MainController {
     public ResponseEntity changePrices(@RequestBody List<Luggage> luggages){
         try {
             System.out.println(luggages.toString());
-
             luggageRepository.saveAll(luggages);
-
             return new ResponseEntity(HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity(HttpStatus.CONFLICT);
