@@ -74,4 +74,5 @@ public class Luggage {
     public void setInvoice(Set<Invoice> invoices) {
         this.invoice = invoice;
     }
+
 }
