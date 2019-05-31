@@ -25,8 +25,8 @@ public class User {
     private RolUser rol_user;
 
     private String name;
-    private String first_surname;
-    private String second_surname;
+
+    private String surnames;
 
     @OneToMany(mappedBy = "user")
     private Set<Invoice> invoices;
@@ -63,21 +63,9 @@ public class User {
         this.name = name;
     }
 
-    public String getFirst_surname() {
-        return first_surname;
-    }
+    public String getSurnames() { return surnames; }
 
-    public void setFirst_surname(String first_surname) {
-        this.first_surname = first_surname;
-    }
-
-    public String getSecond_surname() {
-        return second_surname;
-    }
-
-    public void setSecond_surname(String second_surname) {
-        this.second_surname = second_surname;
-    }
+    public void setSurnames(String surnames) { this.surnames = surnames; }
 
     public Set<Invoice> getInvoices() {
         return invoices;
@@ -89,7 +77,7 @@ public class User {
 
     @Override
     public String toString() {
-        return this.getEmail() + " " + this.getName() + " " + this.getFirst_surname() + " " + this.getSecond_surname() + " " + this.getRol_user() ;
+        return this.getEmail() + " " + this.getName() + " " + this.getSurnames() + " " + this.getRol_user() ;
     }
 
 }

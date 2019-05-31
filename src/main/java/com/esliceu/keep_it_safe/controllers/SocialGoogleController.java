@@ -23,47 +23,47 @@ public class SocialGoogleController {
 
     private GoogleConnectionFactory factory = new GoogleConnectionFactory(clientId, secretId);
 
-    @RequestMapping( value = "/loginGoogle", method = RequestMethod.POST)
-    public String useAppGoogle() {
-
-        OAuth2Operations operations = factory.getOAuthOperations();
-        OAuth2Parameters params = new OAuth2Parameters();
-
-        params.setRedirectUri("http://localhost:8081/forwardLoginGoogle");
-        params.setScope("email profile openid");
-
-        String url = operations.buildAuthenticateUrl(params);
-
-        System.out.println("The URL is: " + url);
-
-        return url;
-
-    }
-
-    @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET )
-    public RedirectView forward(@RequestParam("code")
-                                String authorizationCode, HttpServletResponse response) {
-
-        OAuth2Operations operations = factory.getOAuthOperations();
-
-        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
-        Connection<Google> connection = factory.createConnection(accessToken);
-
-        Google googleConnection = connection.getApi();
-
-        System.out.println(googleConnection.getAccessToken());
-
-        if (googleConnection.isAuthorized()) {
-            response.setHeader("Authorisation","Bearer " + googleConnection.getAccessToken());
-            RedirectView redirectView = new RedirectView("http://localhost:8080");
-            redirectView.setPropagateQueryParams(true);
-
-            return redirectView;
-        } else {
-            return new RedirectView("http://localhost:8080");
-        }
-
-
-    }
+//    @RequestMapping( value = "/loginGoogle", method = RequestMethod.POST)
+//    public String useAppGoogle() {
+//
+//        OAuth2Operations operations = factory.getOAuthOperations();
+//        OAuth2Parameters params = new OAuth2Parameters();
+//
+//        params.setRedirectUri("http://localhost:8081/forwardLoginGoogle");
+//        params.setScope("email profile openid");
+//
+//        String url = operations.buildAuthenticateUrl(params);
+//
+//        System.out.println("The URL is: " + url);
+//
+//        return url;
+//
+//    }
+//
+//    @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET )
+//    public RedirectView forward(@RequestParam("code")
+//                                String authorizationCode, HttpServletResponse response) {
+//
+//        OAuth2Operations operations = factory.getOAuthOperations();
+//
+//        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
+//        Connection<Google> connection = factory.createConnection(accessToken);
+//
+//        Google googleConnection = connection.getApi();
+//
+//        System.out.println(googleConnection.getAccessToken());
+//
+//        if (googleConnection.isAuthorized()) {
+//            response.setHeader("Authorisation","Bearer " + googleConnection.getAccessToken());
+//            RedirectView redirectView = new RedirectView("http://localhost:8080");
+//            redirectView.setPropagateQueryParams(true);
+//
+//            return redirectView;
+//        } else {
+//            return new RedirectView("http://localhost:8080");
+//        }
+//
+//
+//    }
 
 }

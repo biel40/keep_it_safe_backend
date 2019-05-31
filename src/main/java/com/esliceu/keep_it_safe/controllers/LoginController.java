@@ -1,0 +1,157 @@
+package com.esliceu.keep_it_safe.controllers;
+
+import com.esliceu.keep_it_safe.JsonController;
+import com.esliceu.keep_it_safe.TokenController;
+import com.esliceu.keep_it_safe.UserController;
+import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.support.OAuth2ConnectionFactory;
+import org.springframework.social.google.api.Google;
+import org.springframework.social.google.connect.GoogleConnectionFactory;
+import org.springframework.social.oauth2.AccessGrant;
+import org.springframework.social.oauth2.OAuth2Operations;
+import org.springframework.social.oauth2.OAuth2Parameters;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+
+@RestController
+public class LoginController {
+    private String clientId = "637594007727-3o8tnk0vhafhh7o0p3hk5tib3q5rudk6.apps.googleusercontent.com";
+
+    private String secretId = "kgEDC-HtqsjxQZi6Jv-kYivr";
+
+    @Value("${jwt.key}")
+    private String SECRET_KEY;
+
+    @Value("${verify.token.google}")
+    private  String verifyUrlGoogleToke;
+
+
+
+    private UserRepository userRepository;
+    private  TokenController tokenController;
+    private OAuth2ConnectionFactory factory = new GoogleConnectionFactory(clientId, secretId);
+    private JsonController jsonController;
+    private UserController userController;
+
+    @Autowired
+    public LoginController(UserRepository userRepository, TokenController tokenController, JsonController jsonController, UserController userController){
+        this.userRepository = userRepository;
+        this.tokenController = tokenController;
+        this.jsonController = jsonController;
+        this.userController = userController;
+    }
+
+
+    @RequestMapping(value = "/localLogin", method = RequestMethod.POST)
+    public ResponseEntity<String> localLogin(@RequestBody String jsonLogin) {
+
+        // Deserializamos el JSON que nos llega por el Body y lo convertimos a un objeto User.
+        User user = jsonController.userFromLocal(jsonLogin);
+
+        User userInDb = userController.getUserByEmailAndPasswos(user.getEmail(), user.getPassword());
+
+        // Si no existe, devolvemos un Unauthorized
+        if (userInDb == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // Si existe le generamos un Token
+        return new ResponseEntity<>(tokenController.getJWTToken(userInDb), HttpStatus.OK);
+
+    }
+
+    @RequestMapping( value = "/oAuth/google", method = RequestMethod.POST)
+    public String useAppGoogle() {
+
+        OAuth2Operations operations = factory.getOAuthOperations();
+        OAuth2Parameters params = new OAuth2Parameters();
+
+        params.setRedirectUri("http://localhost:8081/forwardLoginGoogle");
+        params.setScope("email profile");
+
+        String url = operations.buildAuthenticateUrl(params);
+
+        System.out.println("The URL is: " + url);
+        return url;
+    }
+
+    @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET )
+    public RedirectView forward(@RequestParam("code")
+                                        String authorizationCode, HttpServletResponse response) throws IOException {
+        OAuth2Operations operations = factory.getOAuthOperations();
+
+        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
+        Connection connection = factory.createConnection(accessToken);
+
+        Google googleConnection = (Google) connection.getApi();
+
+        //Succes code 200, error code 401
+
+        URL url = new URL(verifyUrlGoogleToke +  googleConnection.getAccessToken() +"papu");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+
+        System.out.println(con.getResponseCode());
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+
+        con.disconnect();
+
+        User user = jsonController.userFromGoogleJson(content.toString());
+
+        System.out.println(user.toString());
+
+        if (googleConnection.isAuthorized()) {
+            response.setHeader("Authorisation","Bearer " + googleConnection.getAccessToken());
+            RedirectView redirectView = new RedirectView("http://localhost:8080");
+            redirectView.setPropagateQueryParams(true);
+
+            return redirectView;
+        } else {
+            return new RedirectView("http://localhost:8080");
+        }
+    }
+
+    public String verified(String foo) throws IOException {
+
+        URL url = new URL(foo);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+
+        System.out.println(con.getResponseCode());
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+
+        con.disconnect();
+
+        return  "";
+
+    }
+
+}

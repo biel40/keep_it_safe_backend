@@ -33,8 +33,7 @@ public class MockDatabase {
 
         User user_1 = context.getBean(User.class);
         user_1.setName("AAAAA");
-        user_1.setFirst_surname("BBBBB");
-        user_1.setSecond_surname("CCCCCC");
+        user_1.setSurnames("BBBBBB CCCCC");
         user_1.setPassword("*******");
         user_1.setEmail("usuario1@gmail.com");
         user_1.setRol_user(RolUser.EMPLOYEE);
@@ -42,7 +41,7 @@ public class MockDatabase {
 
         User user_2 = context.getBean(User.class);
         user_2.setName("ZZZZZ");
-        user_2.setFirst_surname("XXXXX");
+        user_2.setSurnames("XXXXXX WWWWWW");
         user_2.setRol_user(RolUser.CLIENT);
         user_2.setPassword("*******");
         user_2.setEmail("usuario2@gmail.com");
@@ -50,7 +49,7 @@ public class MockDatabase {
 
         User biel = context.getBean(User.class);
         biel.setName("Biel");
-        biel.setFirst_surname("Borras");
+        biel.setSurnames("Borras Serra");
         biel.setRol_user(RolUser.CLIENT);
         biel.setPassword("biel");
         biel.setEmail("bielet40@gmail.com");

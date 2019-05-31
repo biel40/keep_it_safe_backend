@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 @Controller
 public class SocialFacebookController {
@@ -24,7 +26,7 @@ public class SocialFacebookController {
     private FacebookConnectionFactory facebookConnectionFactory = new FacebookConnectionFactory(clientId, secretId);
 
     @RequestMapping(value = "/loginFacebook", method = RequestMethod.POST)
-    public RedirectView useAppFacebook() {
+    public String useAppFacebook() {
 
         OAuth2Operations operations = facebookConnectionFactory.getOAuthOperations();
         OAuth2Parameters params = new OAuth2Parameters();
@@ -36,13 +38,13 @@ public class SocialFacebookController {
 
         System.out.println(url);
 
-        return new RedirectView(url);
+        return url;
 
     }
 
     @RequestMapping(value = "/forwardLoginFacebook", method = RequestMethod.GET)
-    public ResponseEntity forward(@RequestParam("code")
-                                String authorizationCode) {
+    public RedirectView hola (@RequestParam("code")
+                                String authorizationCode ,HttpServletResponse response) {
 
 
         OAuth2Operations operations = facebookConnectionFactory.getOAuthOperations();
@@ -55,9 +57,13 @@ public class SocialFacebookController {
         System.out.println(accessToken.getAccessToken());
 
         if (facebookConnection.isAuthorized()) {
-            return new ResponseEntity(accessToken.getAccessToken(), HttpStatus.OK);
+            response.setHeader("Authorisation","Bearer " + accessToken.getAccessToken());
+            RedirectView redirectView = new RedirectView("http://localhost:8080");
+            redirectView.setPropagateQueryParams(true);
+
+            return redirectView;
         } else {
-            return new ResponseEntity(accessToken.getAccessToken(), HttpStatus.UNAUTHORIZED);
+            return new RedirectView("http://localhost:8080");
         }
 
     }
