@@ -19,6 +19,7 @@ import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -90,68 +91,55 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET )
-    public RedirectView forward(@RequestParam("code")
-                                        String authorizationCode, HttpServletResponse response) throws IOException {
+    public void forward(@RequestParam("code")
+                                        String authorizationCode, HttpServletResponse response, HttpServletRequest request) throws Exception {
         OAuth2Operations operations = factory.getOAuthOperations();
 
         AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
-        Connection connection = factory.createConnection(accessToken);
+        Connection<Google> connection = factory.createConnection(accessToken);
 
-        Google googleConnection = (Google) connection.getApi();
+        String string =  this.verified(verifyUrlGoogleToke +  accessToken.getAccessToken());
+        String jwt;
 
-        //Succes code 200, error code 401
 
-        URL url = new URL(verifyUrlGoogleToke +  googleConnection.getAccessToken() +"papu");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        if(string != null){
+            User user = jsonController.userFromGoogleJson(string);
+            User userInDB = userRepository.findByEmail(user.getEmail());
+            if(userInDB != null) {
+                jwt = tokenController.getJWTToken(userInDB);
+            } else {
+                userController.saveUser(user);
+                jwt = tokenController.getJWTToken(user);
+            }
 
-        System.out.println(con.getResponseCode());
+            response.sendRedirect("http://localhost:8080?token=" + jwt);
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-
-        con.disconnect();
-
-        User user = jsonController.userFromGoogleJson(content.toString());
-
-        System.out.println(user.toString());
-
-        if (googleConnection.isAuthorized()) {
-            response.setHeader("Authorisation","Bearer " + googleConnection.getAccessToken());
-            RedirectView redirectView = new RedirectView("http://localhost:8080");
-            redirectView.setPropagateQueryParams(true);
-
-            return redirectView;
-        } else {
-            return new RedirectView("http://localhost:8080");
+        } else  {
+            response.sendRedirect(request.getHeader("referer"));
         }
     }
 
-    public String verified(String foo) throws IOException {
+    private String verified(String foo) throws IOException {
 
         URL url = new URL(foo);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-
         System.out.println(con.getResponseCode());
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        if (con.getResponseCode() == 200){
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+
+            con.disconnect();
+            return  content.toString();
         }
-
         con.disconnect();
-
-        return  "";
-
+        return  null;
     }
 
 }

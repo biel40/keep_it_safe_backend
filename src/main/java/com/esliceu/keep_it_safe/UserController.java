@@ -24,4 +24,12 @@ public class UserController {
         User user = userRepository.findByEmailAndPassword(email, password);
         return user;
     }
+
+    public void saveUser(User user) throws Exception {
+      try {
+         userRepository.save(user);
+      } catch (RuntimeException e) {
+            throw new Exception(e);
+      }
+    }
 }

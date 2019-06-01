@@ -28,7 +28,7 @@ private String SECRET_KEY;
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
 
-        return "Bearer " + token;
+        return token;
 
     }
 }
