@@ -16,7 +16,6 @@ import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -28,6 +27,7 @@ import java.net.URL;
 
 @RestController
 public class LoginController {
+
     private String clientId = "637594007727-3o8tnk0vhafhh7o0p3hk5tib3q5rudk6.apps.googleusercontent.com";
 
     private String secretId = "kgEDC-HtqsjxQZi6Jv-kYivr";
@@ -36,7 +36,7 @@ public class LoginController {
     private String SECRET_KEY;
 
     @Value("${verify.token.google}")
-    private String verifyUrlGoogleToke;
+    private String verifyUrlGoogleToken;
 
 
     private UserRepository userRepository;
@@ -60,7 +60,7 @@ public class LoginController {
         // Deserializamos el JSON que nos llega por el Body y lo convertimos a un objeto User.
         User user = jsonController.userFromLocal(jsonLogin);
 
-        User userInDb = userController.getUserByEmailAndPasswos(user.getEmail(), user.getPassword());
+        User userInDb = userController.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
 
         // Si no existe, devolvemos un Unauthorized
         if (userInDb == null) {
@@ -79,7 +79,7 @@ public class LoginController {
         OAuth2Parameters params = new OAuth2Parameters();
 
         params.setRedirectUri("http://localhost:8081/forwardLoginGoogle");
-        params.setScope("email profile");
+        params.setScope("email profile openid");
 
         String url = operations.buildAuthenticateUrl(params);
 
@@ -89,18 +89,20 @@ public class LoginController {
 
     @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET)
     public void forward(@RequestParam("code")
-                                String authorizationCode, HttpServletResponse response, HttpServletRequest request) throws Exception {
+                        String authorizationCode, HttpServletResponse response, HttpServletRequest request) throws Exception {
+
         OAuth2Operations operations = factory.getOAuthOperations();
 
         AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
 
-        String string = this.verified(verifyUrlGoogleToke + accessToken.getAccessToken());
+        String string = this.verified(verifyUrlGoogleToken + accessToken.getAccessToken());
         String jwt;
 
-
         if (string != null) {
+
             User user = jsonController.userFromGoogleJson(string);
             User userInDB = userRepository.findByEmail(user.getEmail());
+
             if (userInDB != null) {
                 jwt = tokenController.getJWTToken(userInDB);
             } else {
@@ -117,13 +119,13 @@ public class LoginController {
 
     @RequestMapping(value = "token/verify", method = RequestMethod.POST)
     public ResponseEntity<String> verifiedToken(@RequestBody String token) {
-        String jswt = tokenController.validateToken(token).toString();
+
+        String jswt = tokenController.validateToken(token);
 
         if(jswt != null) {
-            return new  ResponseEntity<>(jswt, HttpStatus.OK);
-        }
-
-        return new  ResponseEntity(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(jswt, HttpStatus.OK);
+            // Debuggear aquí cuando el Token no es válido.
+        } else return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
     private String verified(String foo) throws IOException {
@@ -131,6 +133,7 @@ public class LoginController {
         URL url = new URL(foo);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
+
         System.out.println(con.getResponseCode());
 
         if (con.getResponseCode() == 200) {

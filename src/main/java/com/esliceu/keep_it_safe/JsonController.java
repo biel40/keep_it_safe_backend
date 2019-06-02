@@ -23,11 +23,14 @@ public class JsonController {
     public User userFromGoogleJson(String json) {
 
         JsonObject googleUser = gson.fromJson(json, JsonObject.class);
-        String email = googleUser.get("emails").getAsJsonArray().get(0).getAsJsonObject().get("value").toString().replace("\"", "");
-        String surnames =  googleUser.get("name").getAsJsonObject().get("familyName").toString().replace("\"", "");
-        String name = googleUser.get("name").getAsJsonObject().get("givenName").toString().replace("\"", "");
 
-        return this.createUser(email, name, surnames);
+        String email = googleUser.get("emails").getAsJsonArray().get(0).getAsJsonObject().get("value").toString().replace("\"", "");
+        String surnames = googleUser.get("name").getAsJsonObject().get("familyName").toString().replace("\"", "");
+        String name = googleUser.get("name").getAsJsonObject().get("givenName").toString().replace("\"", "");
+        String imageUrl = googleUser.get("image").getAsJsonObject().get("url").toString().replace("\"", "");
+
+        return this.createUser(email, name, surnames, imageUrl);
+
     }
 
     public User userFromLocal(String userJson) {
@@ -35,14 +38,14 @@ public class JsonController {
         return user;
     }
 
-
-    private User createUser (String email, String name, String surnames) {
+    private User createUser (String email, String name, String surnames, String imageUrl) {
 
         User user = context.getBean(User.class);
         user.setEmail(email);
         user.setName(name);
         user.setSurnames(surnames);
         user.setRol_user(RolUser.CLIENT);
+        user.setImageUrl(imageUrl);
 
         return user;
     }

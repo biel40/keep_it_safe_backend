@@ -24,8 +24,8 @@ public class User {
     private RolUser rol_user;
 
     private String name;
-
     private String surnames;
+    private String imageUrl;
 
     @OneToMany(mappedBy = "user")
     private Set<Invoice> invoices;
@@ -74,9 +74,18 @@ public class User {
         this.invoices = invoices;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public String toString() {
-        return this.getEmail() + " " + this.getName() + " " + this.getSurnames() + " " + this.getRol_user() ;
+        return this.getEmail() + " " + this.getName() + " " + this.getSurnames() + " " + this.getRol_user() + " " + this.getImageUrl() ;
     }
+
 
 }

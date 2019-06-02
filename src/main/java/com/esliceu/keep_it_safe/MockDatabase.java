@@ -52,7 +52,7 @@ public class MockDatabase {
         biel.setSurnames("Borras Serra");
         biel.setRol_user(RolUser.CLIENT);
         biel.setPassword("biel");
-        biel.setEmail("bielet40@gmail.com");
+        biel.setEmail("bielet40@hotmail.es");
         userRepository.save(biel);
 
 

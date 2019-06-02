@@ -1,7 +1,7 @@
 package com.esliceu.keep_it_safe;
 
 import com.esliceu.keep_it_safe.entities.User;
-import io.jsonwebtoken.Claims;
+import com.google.gson.Gson;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
@@ -12,13 +12,14 @@ import java.util.Date;
 
 @Component
 public class TokenController {
+
     @Value("${jwt.key}")
     private String SECRET_KEY;
 
     public String getJWTToken(User user) {
 
-        System.out.println(SECRET_KEY);
         System.out.println(user.toString());
+        System.out.println(user.getImageUrl());
 
         String token = Jwts
                 .builder()
@@ -26,6 +27,7 @@ public class TokenController {
                 .claim("role", user.getRol_user())
                 .claim("name", user.getName())
                 .claim("surnames", user.getSurnames())
+                .claim("imageUrl", user.getImageUrl())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
@@ -34,12 +36,17 @@ public class TokenController {
 
     }
 
-    public Claims validateToken(String token) {
+    public String validateToken(String token) {
         try {
-            return Jwts.parser()
+
+            Gson gson = new Gson();
+
+            //Lo transformamos a Json
+            return gson.toJson(Jwts.parser()
                     .setSigningKey(SECRET_KEY.getBytes())
                     .parseClaimsJws(token)
-                    .getBody();
+                    .getBody());
+
         } catch (io.jsonwebtoken.JwtException e) {
             System.out.println(e);
             return null;
