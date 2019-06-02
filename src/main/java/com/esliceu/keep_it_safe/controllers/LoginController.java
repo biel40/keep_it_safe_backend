@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
@@ -29,7 +28,6 @@ import java.net.URL;
 
 @RestController
 public class LoginController {
-
     private String clientId = "637594007727-3o8tnk0vhafhh7o0p3hk5tib3q5rudk6.apps.googleusercontent.com";
 
     private String secretId = "kgEDC-HtqsjxQZi6Jv-kYivr";
@@ -38,16 +36,17 @@ public class LoginController {
     private String SECRET_KEY;
 
     @Value("${verify.token.google}")
-    private String verifyUrlGoogleToken;
+    private String verifyUrlGoogleToke;
+
 
     private UserRepository userRepository;
     private TokenController tokenController;
-    private OAuth2ConnectionFactory factory = new GoogleConnectionFactory(clientId, secretId);
+    private OAuth2ConnectionFactory<Google> factory = new GoogleConnectionFactory(clientId, secretId);
     private JsonController jsonController;
     private UserController userController;
 
     @Autowired
-    public LoginController(UserRepository userRepository, TokenController tokenController, JsonController jsonController, UserController userController){
+    public LoginController(UserRepository userRepository, TokenController tokenController, JsonController jsonController, UserController userController) {
         this.userRepository = userRepository;
         this.tokenController = tokenController;
         this.jsonController = jsonController;
@@ -55,22 +54,25 @@ public class LoginController {
     }
 
 
-    @RequestMapping(value = "/localLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/login/local", method = RequestMethod.POST)
     public ResponseEntity<String> localLogin(@RequestBody String jsonLogin) {
 
         // Deserializamos el JSON que nos llega por el Body y lo convertimos a un objeto User.
         User user = jsonController.userFromLocal(jsonLogin);
+
         User userInDb = userController.getUserByEmailAndPasswos(user.getEmail(), user.getPassword());
 
+        // Si no existe, devolvemos un Unauthorized
         if (userInDb == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+        // Si existe le generamos un Token
         return new ResponseEntity<>(tokenController.getJWTToken(userInDb), HttpStatus.OK);
 
     }
 
-    @RequestMapping( value = "/oAuth/google", method = RequestMethod.POST)
+    @RequestMapping(value = "/oAuth/google", method = RequestMethod.POST)
     public String useAppGoogle() {
 
         OAuth2Operations operations = factory.getOAuthOperations();
@@ -85,35 +87,43 @@ public class LoginController {
         return url;
     }
 
-    @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET )
+    @RequestMapping(value = "/forwardLoginGoogle", method = RequestMethod.GET)
     public void forward(@RequestParam("code")
-                        String authorizationCode, HttpServletResponse response, HttpServletRequest request) throws Exception {
-
+                                String authorizationCode, HttpServletResponse response, HttpServletRequest request) throws Exception {
         OAuth2Operations operations = factory.getOAuthOperations();
 
         AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
 
-        String verificationString = this.verified(verifyUrlGoogleToken + accessToken.getAccessToken());
-        String jwtToken;
+        String string = this.verified(verifyUrlGoogleToke + accessToken.getAccessToken());
+        String jwt;
 
 
-        if(verificationString != null){
-
-            User user = jsonController.userFromGoogleJson(verificationString);
+        if (string != null) {
+            User user = jsonController.userFromGoogleJson(string);
             User userInDB = userRepository.findByEmail(user.getEmail());
-
-            if(userInDB != null) {
-                jwtToken = tokenController.getJWTToken(userInDB);
+            if (userInDB != null) {
+                jwt = tokenController.getJWTToken(userInDB);
             } else {
                 userController.saveUser(user);
-                jwtToken = tokenController.getJWTToken(user);
+                jwt = tokenController.getJWTToken(user);
             }
 
-            response.sendRedirect("http://localhost:8080?token=" + jwtToken);
+            response.sendRedirect("http://localhost:8080?token=" + jwt);
 
-        } else  {
+        } else {
             response.sendRedirect(request.getHeader("referer"));
         }
+    }
+
+    @RequestMapping(value = "token/verify", method = RequestMethod.POST)
+    public ResponseEntity<String> verifiedToken(@RequestBody String token) {
+        String jswt = tokenController.validateToken(token).toString();
+
+        if(jswt != null) {
+            return new  ResponseEntity<>(jswt, HttpStatus.OK);
+        }
+
+        return new  ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
     private String verified(String foo) throws IOException {
@@ -123,7 +133,7 @@ public class LoginController {
         con.setRequestMethod("GET");
         System.out.println(con.getResponseCode());
 
-        if (con.getResponseCode() == 200){
+        if (con.getResponseCode() == 200) {
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
             String inputLine;
@@ -133,10 +143,10 @@ public class LoginController {
             }
 
             con.disconnect();
-            return  content.toString();
+            return content.toString();
         }
         con.disconnect();
-        return  null;
+        return null;
     }
 
 }
