@@ -1,6 +1,7 @@
 package com.esliceu.keep_it_safe;
 
 import com.esliceu.keep_it_safe.entities.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
@@ -10,8 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class TokenController {@Value("${jwt.key}")
-private String SECRET_KEY;
+public class TokenController {
+    @Value("${jwt.key}")
+    private String SECRET_KEY;
 
     public String getJWTToken(User user) {
 
@@ -30,5 +32,17 @@ private String SECRET_KEY;
 
         return token;
 
+    }
+
+    public Claims validateToken(String token) {
+        try {
+            return Jwts.parser()
+                    .setSigningKey(SECRET_KEY.getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (io.jsonwebtoken.JwtException e) {
+            System.out.println(e);
+            return null;
+        }
     }
 }

@@ -25,6 +25,7 @@ public class TokenFilter extends OncePerRequestFilter {
     @Value("${jwt.key}")
     private String SECRET_KEY;
 
+
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
 
@@ -66,8 +67,9 @@ public class TokenFilter extends OncePerRequestFilter {
 
         String authenticationHeader = request.getHeader(HEADER_AUTHORIZATION);
 
-        if (authenticationHeader == null || !authenticationHeader.startsWith(BEARER_PREFIX))
+        if (authenticationHeader == null || !authenticationHeader.startsWith(BEARER_PREFIX)) {
             return false;
+        }
 
         return true;
 
