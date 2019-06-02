@@ -20,7 +20,7 @@ public class UserController {
         return user;
     }
 
-    public  User getUserByEmailAndPasswos(String email, String password) {
+    public User getUserByEmailAndPasswos(String email, String password) {
         User user = userRepository.findByEmailAndPassword(email, password);
         return user;
     }

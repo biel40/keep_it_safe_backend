@@ -12,6 +12,7 @@ public class JsonController {
 
     private Gson gson;
     private ApplicationContext context;
+
     @Autowired
     public JsonController(Gson gson, ApplicationContext context){
         this.gson = gson;
@@ -20,6 +21,7 @@ public class JsonController {
 
 
     public User userFromGoogleJson(String json) {
+
         JsonObject googleUser = gson.fromJson(json, JsonObject.class);
         String email = googleUser.get("emails").getAsJsonArray().get(0).getAsJsonObject().get("value").toString().replace("\"", "");
         String surnames =  googleUser.get("name").getAsJsonObject().get("familyName").toString().replace("\"", "");
@@ -30,11 +32,12 @@ public class JsonController {
 
     public User userFromLocal(String userJson) {
         User user = gson.fromJson(userJson, User.class);
-        return  user;
+        return user;
     }
 
 
     private User createUser (String email, String name, String surnames) {
+
         User user = context.getBean(User.class);
         user.setEmail(email);
         user.setName(name);

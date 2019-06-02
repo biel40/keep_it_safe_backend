@@ -6,7 +6,6 @@ import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import com.esliceu.keep_it_safe.repository.UserRepository;
-import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +30,7 @@ public class MainController {
         this.invoiceRepository = invoiceRepository;
     }
 
-    /* LUGGAGE ENDPOINTS */
+    /* LUGGAGES */
 
     @RequestMapping(value = "/luggages", method = RequestMethod.GET)
     public List<Luggage> getLuggages() {
@@ -39,7 +38,7 @@ public class MainController {
     }
 
 
-    /* INVOICES ENDPOINTS */
+    /* INVOICES */
 
     @RequestMapping(value = "/invoices", method = RequestMethod.GET)
     public List<Invoice> getAllInvoices() {
