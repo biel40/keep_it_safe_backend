@@ -1,5 +1,6 @@
-package com.esliceu.keep_it_safe;
+package com.esliceu.keep_it_safe.managers;
 
+import com.esliceu.keep_it_safe.entities.RolUser;
 import com.esliceu.keep_it_safe.entities.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -8,17 +9,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JsonController {
+public class JsonManager {
 
     private Gson gson;
     private ApplicationContext context;
 
     @Autowired
-    public JsonController(Gson gson, ApplicationContext context){
+    public JsonManager(Gson gson, ApplicationContext context){
         this.gson = gson;
         this.context = context;
     }
-
 
     public User userFromGoogleJson(String json) {
 

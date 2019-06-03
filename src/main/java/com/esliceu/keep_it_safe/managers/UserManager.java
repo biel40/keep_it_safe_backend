@@ -1,4 +1,4 @@
-package com.esliceu.keep_it_safe;
+package com.esliceu.keep_it_safe.managers;
 
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.UserRepository;
@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserController {
+public class UserManager {
 
     private UserRepository userRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository){
+    public UserManager(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 

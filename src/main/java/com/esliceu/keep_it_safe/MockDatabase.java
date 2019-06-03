@@ -1,8 +1,6 @@
 package com.esliceu.keep_it_safe;
 
-import com.esliceu.keep_it_safe.entities.Invoice;
-import com.esliceu.keep_it_safe.entities.Luggage;
-import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.entities.*;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import com.esliceu.keep_it_safe.repository.UserRepository;

@@ -1,4 +1,4 @@
-package com.esliceu.keep_it_safe;
+package com.esliceu.keep_it_safe.managers;
 
 import com.esliceu.keep_it_safe.entities.User;
 import com.google.gson.Gson;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class TokenController {
+public class TokenManager {
 
     @Value("${jwt.key}")
     private String SECRET_KEY;

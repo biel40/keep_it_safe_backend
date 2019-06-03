@@ -1,8 +1,9 @@
 package com.esliceu.keep_it_safe.controllers;
 
-import com.esliceu.keep_it_safe.JsonController;
-import com.esliceu.keep_it_safe.TokenController;
-import com.esliceu.keep_it_safe.UserController;
+import com.esliceu.keep_it_safe.Constants;
+import com.esliceu.keep_it_safe.managers.JsonManager;
+import com.esliceu.keep_it_safe.managers.TokenManager;
+import com.esliceu.keep_it_safe.managers.UserManager;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,22 +36,18 @@ public class LoginController {
     @Value("${jwt.key}")
     private String SECRET_KEY;
 
-    @Value("${verify.token.google}")
-    private String verifyUrlGoogleToken;
-
-
     private UserRepository userRepository;
-    private TokenController tokenController;
+    private TokenManager tokenManager;
     private OAuth2ConnectionFactory<Google> factory = new GoogleConnectionFactory(clientId, secretId);
-    private JsonController jsonController;
-    private UserController userController;
+    private JsonManager jsonManager;
+    private UserManager userManager;
 
     @Autowired
-    public LoginController(UserRepository userRepository, TokenController tokenController, JsonController jsonController, UserController userController) {
+    public LoginController(UserRepository userRepository, TokenManager tokenManager, JsonManager jsonManager, UserManager userManager) {
         this.userRepository = userRepository;
-        this.tokenController = tokenController;
-        this.jsonController = jsonController;
-        this.userController = userController;
+        this.tokenManager = tokenManager;
+        this.jsonManager = jsonManager;
+        this.userManager = userManager;
     }
 
 
@@ -58,17 +55,15 @@ public class LoginController {
     public ResponseEntity<String> localLogin(@RequestBody String jsonLogin) {
 
         // Deserializamos el JSON que nos llega por el Body y lo convertimos a un objeto User.
-        User user = jsonController.userFromLocal(jsonLogin);
-
-        User userInDb = userController.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
+        User user = jsonManager.userFromLocal(jsonLogin);
+        User userInDb = userManager.getUserByEmailAndPassword(user.getEmail(), user.getPassword());
 
         // Si no existe, devolvemos un Unauthorized
         if (userInDb == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
         // Si existe le generamos un Token
-        return new ResponseEntity<>(tokenController.getJWTToken(userInDb), HttpStatus.OK);
+        return new ResponseEntity<>(tokenManager.getJWTToken(userInDb), HttpStatus.OK);
 
     }
 
@@ -78,7 +73,7 @@ public class LoginController {
         OAuth2Operations operations = factory.getOAuthOperations();
         OAuth2Parameters params = new OAuth2Parameters();
 
-        params.setRedirectUri("http://localhost:8081/forwardLoginGoogle");
+        params.setRedirectUri(Constants.GOOGLE_FORWARDING_URL);
         params.setScope("email profile openid");
 
         String url = operations.buildAuthenticateUrl(params);
@@ -92,25 +87,24 @@ public class LoginController {
                         String authorizationCode, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         OAuth2Operations operations = factory.getOAuthOperations();
+        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, Constants.GOOGLE_FORWARDING_URL, null);
 
-        AccessGrant accessToken = operations.exchangeForAccess(authorizationCode, "http://localhost:8081/forwardLoginGoogle", null);
-
-        String string = this.verified(verifyUrlGoogleToken + accessToken.getAccessToken());
+        String verifiedToken = this.verified(Constants.GOOGLE_VERIFICATIONTOKEN_URL + accessToken.getAccessToken());
         String jwt;
 
-        if (string != null) {
+        if (verifiedToken != null) {
 
-            User user = jsonController.userFromGoogleJson(string);
+            User user = jsonManager.userFromGoogleJson(verifiedToken);
             User userInDB = userRepository.findByEmail(user.getEmail());
 
             if (userInDB != null) {
-                jwt = tokenController.getJWTToken(userInDB);
+                jwt = tokenManager.getJWTToken(userInDB);
             } else {
-                userController.saveUser(user);
-                jwt = tokenController.getJWTToken(user);
+                userManager.saveUser(user);
+                jwt = tokenManager.getJWTToken(user);
             }
 
-            response.sendRedirect("http://localhost:8080?token=" + jwt);
+            response.sendRedirect( Constants.FRONTEND_URL + "?token=" + jwt);
 
         } else {
             response.sendRedirect(request.getHeader("referer"));
@@ -120,7 +114,7 @@ public class LoginController {
     @RequestMapping(value = "token/verify", method = RequestMethod.POST)
     public ResponseEntity<String> verifiedToken(@RequestBody String token) {
 
-        String jswt = tokenController.validateToken(token);
+        String jswt = tokenManager.validateToken(token);
 
         if(jswt != null) {
             return new ResponseEntity<>(jswt, HttpStatus.OK);
@@ -128,16 +122,16 @@ public class LoginController {
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
-    private String verified(String foo) throws IOException {
+    private String verified(String urlString) throws IOException {
 
-        URL url = new URL(foo);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
+        URL url = new URL(urlString);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
 
-        System.out.println(con.getResponseCode());
+        System.out.println(urlConnection.getResponseCode());
 
-        if (con.getResponseCode() == 200) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        if (urlConnection.getResponseCode() == 200) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
             String inputLine;
             StringBuilder content = new StringBuilder();
@@ -145,10 +139,10 @@ public class LoginController {
                 content.append(inputLine);
             }
 
-            con.disconnect();
+            urlConnection.disconnect();
             return content.toString();
         }
-        con.disconnect();
+        urlConnection.disconnect();
         return null;
     }
 

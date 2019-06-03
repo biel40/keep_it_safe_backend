@@ -1,9 +1,6 @@
 package com.esliceu.keep_it_safe.entities;
 
-import com.esliceu.keep_it_safe.LuggageType;
-
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity

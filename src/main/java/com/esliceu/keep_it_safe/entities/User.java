@@ -1,8 +1,6 @@
 package com.esliceu.keep_it_safe.entities;
 
 
-import com.esliceu.keep_it_safe.RolUser;
-
 import javax.persistence.*;
 import java.util.Set;
 
