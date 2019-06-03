@@ -2,6 +2,7 @@ package com.esliceu.keep_it_safe.managers;
 
 import com.esliceu.keep_it_safe.entities.User;
 import com.google.gson.Gson;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
@@ -23,7 +24,6 @@ public class TokenManager {
 
         String token = Jwts
                 .builder()
-                .setSubject(user.toString())
                 .claim("role", user.getRol_user())
                 .claim("name", user.getName())
                 .claim("surnames", user.getSurnames())
@@ -39,13 +39,13 @@ public class TokenManager {
     public String validateToken(String token) {
         try {
 
-            Gson gson = new Gson();
-
-            //Lo transformamos a Json
-            return gson.toJson(Jwts.parser()
+            Claims claims = Jwts.parser()
                     .setSigningKey(SECRET_KEY.getBytes())
                     .parseClaimsJws(token)
-                    .getBody());
+                    .getBody();
+            claims.setExpiration(new Date(System.currentTimeMillis() + 3600000));
+
+            return new Gson().toJson(claims);
 
         } catch (io.jsonwebtoken.JwtException e) {
             System.out.println(e);
