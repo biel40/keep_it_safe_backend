@@ -36,20 +36,34 @@ public class TokenManager {
 
     }
 
-    public String validateToken(String token) {
+    public String[] validateToken(String token) {
         try {
 
             Claims claims = Jwts.parser()
                     .setSigningKey(SECRET_KEY.getBytes())
                     .parseClaimsJws(token)
                     .getBody();
-            claims.setExpiration(new Date(System.currentTimeMillis() + 3600000));
+            Date date = new Date(System.currentTimeMillis() + 3600000);
+            claims.setExpiration(date);
 
-            return new Gson().toJson(claims);
+            return new String[]{new Gson().toJson(claims), this.refreshToken(claims)};
 
         } catch (io.jsonwebtoken.JwtException e) {
             System.out.println(e);
             return null;
         }
+    }
+
+    private String refreshToken(Claims claims) {
+        String token = Jwts
+                .builder()
+                .claim("role", claims.get("role"))
+                .claim("name", claims.get("name"))
+                .claim("surnames", claims.get("surnames"))
+                .claim("imageUrl", claims.get("imageUrl"))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
+        return  token;
     }
 }

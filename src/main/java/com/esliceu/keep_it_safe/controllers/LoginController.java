@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 
 @RestController
@@ -112,12 +113,13 @@ public class LoginController {
     }
 
     @RequestMapping(value = "token/verify", method = RequestMethod.POST)
-    public ResponseEntity<String> verifiedToken(@RequestBody String token) {
+    public ResponseEntity<String[]> verifiedToken(@RequestBody String token) {
+        System.out.println("This is de token i recived: " + token);
+        String jwt[] = tokenManager.validateToken(token);
 
-        String jswt = tokenManager.validateToken(token);
-
-        if(jswt != null) {
-            return new ResponseEntity<>(jswt, HttpStatus.OK);
+        if(jwt != null) {
+            System.out.println("This is de token i send: " + jwt[0]+ "algo :"+ jwt[1]);
+            return new ResponseEntity<>(jwt, HttpStatus.OK);
             // Debuggear aquí cuando el Token no es válido.
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
