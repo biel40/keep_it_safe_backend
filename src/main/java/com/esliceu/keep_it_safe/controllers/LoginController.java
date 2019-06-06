@@ -1,10 +1,10 @@
 package com.esliceu.keep_it_safe.controllers;
 
 import com.esliceu.keep_it_safe.Constants;
+import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.managers.JsonManager;
 import com.esliceu.keep_it_safe.managers.TokenManager;
 import com.esliceu.keep_it_safe.managers.entities.UserManager;
-import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +17,7 @@ import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -41,6 +44,8 @@ public class LoginController {
     private OAuth2ConnectionFactory<Google> factory = new GoogleConnectionFactory(clientId, secretId);
     private JsonManager jsonManager;
     private UserManager userManager;
+
+    public static List<String> blackListToken = new ArrayList<>();
 
     @Autowired
     public LoginController(UserRepository userRepository, TokenManager tokenManager, JsonManager jsonManager, UserManager userManager) {
@@ -78,7 +83,6 @@ public class LoginController {
 
         String url = operations.buildAuthenticateUrl(params);
 
-        System.out.println("The URL is: " + url);
         return url;
     }
 
@@ -117,10 +121,17 @@ public class LoginController {
         String jwt[] = tokenManager.validateToken(token);
 
         if(jwt != null) {
-            System.out.println("This is de token i send: " + jwt[0]+ "algo :"+ jwt[1]);
+            System.out.println("This is de token i send: " + jwt[0]+ " algo :"+ jwt[1]);
             return new ResponseEntity<>(jwt, HttpStatus.OK);
             // Debuggear aquí cuando el Token no es válido.
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
+    @RequestMapping(value = "/logOut", method = RequestMethod.POST)
+    public void logOut(@RequestBody String token) {
+        System.out.println("Token to purge HAHAHA -> " + token );
+        LoginController.blackListToken.add(token);
+        System.out.println("THE BLACK LIST " + LoginController.blackListToken.toString());
     }
 
     private String verified(String urlString) throws IOException {
@@ -128,8 +139,6 @@ public class LoginController {
         URL url = new URL(urlString);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("GET");
-
-        System.out.println(urlConnection.getResponseCode());
 
         if (urlConnection.getResponseCode() == 200) {
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
