@@ -3,7 +3,7 @@ package com.esliceu.keep_it_safe.controllers;
 import com.esliceu.keep_it_safe.Constants;
 import com.esliceu.keep_it_safe.managers.JsonManager;
 import com.esliceu.keep_it_safe.managers.TokenManager;
-import com.esliceu.keep_it_safe.managers.UserManager;
+import com.esliceu.keep_it_safe.managers.entities.UserManager;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
 
 
 @RestController

@@ -1,4 +1,4 @@
-package com.esliceu.keep_it_safe.managers;
+package com.esliceu.keep_it_safe.managers.entities;
 
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.UserRepository;

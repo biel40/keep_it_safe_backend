@@ -3,9 +3,10 @@ package com.esliceu.keep_it_safe.controllers;
 import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.Luggage;
 import com.esliceu.keep_it_safe.entities.User;
-import com.esliceu.keep_it_safe.repository.InvoiceRepository;
+import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import com.esliceu.keep_it_safe.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +21,15 @@ import java.util.List;
 @RestController
 public class MainController {
 
-    private final InvoiceRepository invoiceRepository;
+    private InvoiceManager invoiceManager;
     private final LuggageRepository luggageRepository;
     private final UserRepository userRepository;
 
-    public MainController(LuggageRepository luggageRepository, UserRepository userRepository, InvoiceRepository invoiceRepository) {
+    @Autowired
+    public MainController(LuggageRepository luggageRepository, UserRepository userRepository, InvoiceManager invoiceManager) {
         this.luggageRepository = luggageRepository;
         this.userRepository = userRepository;
-        this.invoiceRepository = invoiceRepository;
+        this.invoiceManager = invoiceManager;
     }
 
     /* LUGGAGES */
@@ -35,28 +37,6 @@ public class MainController {
     @RequestMapping(value = "/luggages", method = RequestMethod.GET)
     public List<Luggage> getLuggages() {
         return (List<Luggage>) this.luggageRepository.findAll();
-    }
-
-
-    /* INVOICES */
-
-    @RequestMapping(value = "/invoices", method = RequestMethod.GET)
-    public List<Invoice> getAllInvoices() {
-        return (List<Invoice>) this.invoiceRepository.findAll();
-    }
-
-    @RequestMapping(value = "/invoices/current", method = RequestMethod.GET)
-    public List<Invoice> getAllCurrentInvoices() {
-
-        List<Invoice> allInvoices = (List<Invoice>) this.invoiceRepository.findAll();
-        LinkedList<Invoice> currentInvoices = new LinkedList<>();
-
-        for (Invoice invoice : allInvoices ) {
-            // Miramos que la fecha en la que acaba la factura NO sea inferior a la actual.
-            if (!(invoice.getEnd_date().isBefore(Instant.now())))
-                currentInvoices.add(invoice);
-        }
-        return currentInvoices;
     }
 
 
@@ -70,6 +50,29 @@ public class MainController {
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
     }
+
+
+    /* INVOICES */
+
+    @RequestMapping(value = "/invoices", method = RequestMethod.GET)
+    public List<Invoice> getAllInvoices() {
+        return this.invoiceManager.getAllInvoices();
+    }
+
+    @RequestMapping(value = "/invoices/current", method = RequestMethod.GET)
+    public List<Invoice> getAllCurrentInvoices() {
+
+        List<Invoice> allInvoices = this.invoiceManager.getAllInvoices();
+        LinkedList<Invoice> currentInvoices = new LinkedList<>();
+
+        for (Invoice invoice : allInvoices ) {
+            // Miramos que la fecha en la que acaba la factura NO sea inferior a la actual.
+            if (!(invoice.getEnd_date().isBefore(Instant.now())))
+                currentInvoices.add(invoice);
+        }
+        return currentInvoices;
+    }
+
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public ResponseEntity registerUser(@RequestBody User user) {
