@@ -19,4 +19,6 @@ public class InvoiceManager {
     public List<Invoice> getAllInvoices() {
         return (List<Invoice>) invoiceRepository.findAll();
     }
+
+    public Invoice getInvoiceById(int id) { return this.invoiceRepository.findById(id).orElse(null); }
 }
