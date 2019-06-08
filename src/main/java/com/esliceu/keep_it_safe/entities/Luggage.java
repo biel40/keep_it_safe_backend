@@ -1,6 +1,7 @@
 package com.esliceu.keep_it_safe.entities;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -68,7 +69,7 @@ public class Luggage {
     public void setDeep_dimension(double deep_dimension) {
         this.deep_dimension = deep_dimension;
     }
-
+    @JsonIgnore
     public Set<Invoice> getInvoice() {
         return invoices;
     }
