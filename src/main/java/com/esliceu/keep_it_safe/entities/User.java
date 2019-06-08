@@ -1,6 +1,5 @@
 package com.esliceu.keep_it_safe.entities;
 
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -82,7 +81,12 @@ public class User {
 
     @Override
     public String toString() {
-        return this.getEmail() + " " + this.getName() + " " + this.getSurnames() + " " + this.getRol_user() + " " + this.getImageUrl() ;
+        return  "{\"user_id\":"+this.user_id+"," +
+                "\"email\":\""+this.email+"\", " +
+                "\"name\":\""+this.name+"\", "+
+                "\"surnames\":\""+this.surnames+"\"," +
+                "\"rol_user\":\""+this.rol_user+"\", " +
+                "\"imageUrl\":\""+this.imageUrl+"\"}";
     }
 
 

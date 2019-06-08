@@ -1,10 +1,10 @@
 package com.esliceu.keep_it_safe.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Set;
+import java.util.Calendar;
+import java.util.List;
 
 @Entity
 public class Invoice {
@@ -18,18 +18,27 @@ public class Invoice {
     private double total_price;
 
     @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
 
-    private Instant start_date;
+    private Calendar start_date;
+
 
     @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
 
-    private Instant end_date;
+    private Calendar end_date;
 
     @Column(nullable = false)
     private boolean isVerified;
 
-    @OneToMany(mappedBy = "invoice")
-    private Set<Luggage> luggages;
+    @ManyToMany
+
+    @JoinTable(name = "invoice_luggage",
+            joinColumns = @JoinColumn(name = "invoice_id"),
+            inverseJoinColumns = @JoinColumn(name = "luggage_id"))
+    private List<Luggage> luggages;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -51,19 +60,19 @@ public class Invoice {
         this.total_price = total_price;
     }
 
-    public Instant getStart_date() {
+    public Calendar getStart_date() {
         return start_date;
     }
 
-    public void setStart_date(Instant start_date) {
+    public void setStart_date(Calendar start_date) {
         this.start_date = start_date;
     }
 
-    public Instant getEnd_date() {
+    public Calendar getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(Instant end_date) {
+    public void setEnd_date(Calendar end_date) {
         this.end_date = end_date;
     }
 
@@ -75,11 +84,11 @@ public class Invoice {
         isVerified = verified;
     }
 
-    public Set<Luggage> getLuggages() {
+    public List<Luggage> getLuggages() {
         return luggages;
     }
 
-    public void setLuggages(Set<Luggage> luggages) {
+    public void setLuggages(List<Luggage> luggages) {
         this.luggages = luggages;
     }
 
@@ -89,5 +98,26 @@ public class Invoice {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public String toString(){
+        System.out.println(this.start_date.toInstant());
+        return  "{\"invoice_id\": "+this.invoice_id+", \"total_price\": "+this.total_price+"," +
+                " \"end_date\": \""+this.end_date.toInstant()+"\", " +
+                "\"start_date\":" + " \""+this.start_date.toInstant()+"\", " +
+                "\"user\":"+this.user.toString()+","+
+                "\"luggages\":"+this.getJsonFormatLuggages()+"}";
+    }
+
+    private String getJsonFormatLuggages(){
+        StringBuilder luggagesToJSON = new StringBuilder();
+        luggagesToJSON.append("[");
+        for (Luggage luggage : this.luggages) {
+            luggagesToJSON.append(luggage.toString());
+            luggagesToJSON.append(",");
+        }luggagesToJSON.deleteCharAt(luggagesToJSON.length()-1);
+        luggagesToJSON.append("]");
+        return luggagesToJSON.toString();
     }
 }

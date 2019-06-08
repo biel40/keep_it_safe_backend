@@ -1,5 +1,8 @@
 package com.esliceu.keep_it_safe.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -21,8 +24,10 @@ public class Luggage {
     @Column(nullable = false)
     private double deep_dimension;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Invoice invoice;
+
+    @ManyToMany(mappedBy = "luggages")
+
+    private Set<Invoice> invoices;
 
     public LuggageType getLuggage_type() {
         return luggage_type;
@@ -64,12 +69,21 @@ public class Luggage {
         this.deep_dimension = deep_dimension;
     }
 
-    public Invoice getInvoice() {
-        return invoice;
+    public Set<Invoice> getInvoice() {
+        return invoices;
     }
 
     public void setInvoice(Set<Invoice> invoices) {
-        this.invoice = invoice;
+        this.invoices = invoices;
     }
 
+
+    @Override
+    public String toString() {
+
+        return "{\"luggage_type\": \"" + this.luggage_type + "\", \"deep_dimension\": " + this.deep_dimension + ", " +
+                "\"high_dimension\":" + this.high_dimension + ", \"width_dimension\":" + this.width_dimension + ", " +
+                "\"price\":" + this.price + "}";
+
+    }
 }
