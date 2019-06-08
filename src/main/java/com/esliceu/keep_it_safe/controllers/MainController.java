@@ -4,6 +4,7 @@ import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.Luggage;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
+import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import com.esliceu.keep_it_safe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 @RestController
 public class MainController {
 
-    private InvoiceManager invoiceManager;
+    private final InvoiceManager invoiceManager;
     private final LuggageRepository luggageRepository;
     private final UserRepository userRepository;
 
@@ -52,28 +55,25 @@ public class MainController {
 
     /* INVOICES */
 
-    @RequestMapping(value = "/invoice", method = RequestMethod.GET)
-    public Invoice getInvoice(@RequestParam int id){
-        return this.invoiceManager.getInvoiceById(id);
-    }
 
     @RequestMapping(value = "/invoices", method = RequestMethod.GET)
-    public List<Invoice> getAllInvoices() {
-        return this.invoiceManager.getAllInvoices();
+    public String getAllInvoices() {
+        return invoiceManager.invoicesToJSON(invoiceManager.getAllInvoices());
     }
 
     @RequestMapping(value = "/invoices/current", method = RequestMethod.GET)
-    public List<Invoice> getAllCurrentInvoices() {
+    public String getAllCurrentInvoices() {
 
         List<Invoice> allInvoices = this.invoiceManager.getAllInvoices();
-        LinkedList<Invoice> currentInvoices = new LinkedList<>();
-
+        List<Invoice> currentInvoices = new LinkedList<>();
+        Calendar now = Calendar.getInstance();
         for (Invoice invoice : allInvoices ) {
             // Miramos que la fecha en la que acaba la factura NO sea inferior a la actual.
-            if (!(invoice.getEnd_date().isBefore(Instant.now())))
+            if (invoice.getEnd_date().after(now)){
                 currentInvoices.add(invoice);
+            }
         }
-        return currentInvoices;
+        return invoiceManager.invoicesToJSON(currentInvoices);
     }
 
 

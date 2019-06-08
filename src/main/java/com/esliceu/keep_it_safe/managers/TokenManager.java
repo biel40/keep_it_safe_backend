@@ -24,7 +24,7 @@ public class TokenManager {
 
         String token = Jwts
                 .builder()
-                .claim("role", user.getRol_user())
+                .claim("rol", user.getRol_user())
                 .claim("name", user.getName())
                 .claim("surnames", user.getSurnames())
                 .claim("imageUrl", user.getImageUrl())
@@ -57,7 +57,7 @@ public class TokenManager {
     private String refreshToken(Claims claims) {
         String token = Jwts
                 .builder()
-                .claim("role", claims.get("role"))
+                .claim("rol", claims.get("rol"))
                 .claim("name", claims.get("name"))
                 .claim("surnames", claims.get("surnames"))
                 .claim("imageUrl", claims.get("imageUrl"))

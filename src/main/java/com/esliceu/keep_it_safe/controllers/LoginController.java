@@ -121,7 +121,7 @@ public class LoginController {
         String jwt[] = tokenManager.validateToken(token);
 
         if(jwt != null) {
-            System.out.println("This is de token i send: " + jwt[0]+ " algo :"+ jwt[1]);
+            System.out.println("This is de token i send: " + jwt[0]+ " token :"+ jwt[1]);
             return new ResponseEntity<>(jwt, HttpStatus.OK);
             // Debuggear aquí cuando el Token no es válido.
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
