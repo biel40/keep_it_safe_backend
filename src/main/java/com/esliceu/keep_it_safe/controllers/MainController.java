@@ -55,7 +55,6 @@ public class MainController {
 
     /* INVOICES */
 
-
     @RequestMapping(value = "/invoices", method = RequestMethod.GET)
     public String getAllInvoices() {
         return invoiceManager.invoicesToJSON(invoiceManager.getAllInvoices());

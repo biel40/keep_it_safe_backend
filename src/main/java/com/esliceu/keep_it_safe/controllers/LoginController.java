@@ -115,17 +115,20 @@ public class LoginController {
         }
     }
 
-    @RequestMapping(value = "token/verify", method = RequestMethod.POST)
+    @RequestMapping(value = "/token/verify", method = RequestMethod.POST)
     public ResponseEntity<String[]> verifiedToken(@RequestBody String token) {
-        System.out.println("This is de token i recived: " + token);
+
+        // El token que recibe aqui esta mal formado
+        System.out.println("This is de token Received: " + token);
+
         String jwt[] = tokenManager.validateToken(token);
 
         if(jwt != null) {
-            System.out.println("This is de token i send: " + jwt[0]+ " token :"+ jwt[1]);
+            System.out.println("This is de token I send: " + jwt[0]+ ", Token = "+ jwt[1]);
             return new ResponseEntity<>(jwt, HttpStatus.OK);
-            // Debuggear aquí cuando el Token no es válido.
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
+
 
     @RequestMapping(value = "/logOut", method = RequestMethod.POST)
     public void logOut(@RequestBody String token) {

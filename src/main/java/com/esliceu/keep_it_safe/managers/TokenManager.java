@@ -41,8 +41,9 @@ public class TokenManager {
 
             Claims claims = Jwts.parser()
                     .setSigningKey(SECRET_KEY.getBytes())
-                    .parseClaimsJws(token)
+                    .parseClaimsJws(token.replace("Bearer ", ""))
                     .getBody();
+
             Date date = new Date(System.currentTimeMillis() + 3600000);
             claims.setExpiration(date);
 
@@ -64,6 +65,7 @@ public class TokenManager {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
-        return  token;
+
+        return token;
     }
 }

@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 
 @Configuration
 public class BeansConfiguration {
