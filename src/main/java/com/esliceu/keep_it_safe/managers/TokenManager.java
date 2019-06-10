@@ -9,18 +9,17 @@ import io.jsonwebtoken.impl.TextCodec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class TokenManager {
-
+    public static List<String> blackListToken = new ArrayList<>();
     @Value("${jwt.key}")
     private String SECRET_KEY;
 
     public String getJWTToken(User user) {
-
-        System.out.println(user.toString());
-        System.out.println(user.getImageUrl());
 
         String token = Jwts
                 .builder()

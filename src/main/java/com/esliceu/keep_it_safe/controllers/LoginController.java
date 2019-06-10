@@ -17,7 +17,6 @@ import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -25,8 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 @RestController
@@ -45,7 +43,6 @@ public class LoginController {
     private JsonManager jsonManager;
     private UserManager userManager;
 
-    public static List<String> blackListToken = new ArrayList<>();
 
     @Autowired
     public LoginController(UserRepository userRepository, TokenManager tokenManager, JsonManager jsonManager, UserManager userManager) {
@@ -116,16 +113,12 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/token/verify", method = RequestMethod.POST)
-    public ResponseEntity<String[]> verifiedToken(@RequestBody String token, HttpServletResponse response) {
+    public ResponseEntity<String[]> verifiedToken(@RequestBody String token) {
 
         // El token que recibe aqui esta mal formado
-        System.out.println("This is de token Received: " + token);
-
         String jwt[] = tokenManager.validateToken(token);
 
         if(jwt != null) {
-            System.out.println("This is de token I send: " + jwt[0]+ ", Token = "+ jwt[1]);
-            response.addHeader("Access-Control-Allow-Credentials", "true");
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
@@ -133,9 +126,7 @@ public class LoginController {
 
     @RequestMapping(value = "/logOut", method = RequestMethod.POST)
     public void logOut(@RequestBody String token) {
-        System.out.println("Token to purge HAHAHA -> " + token );
-        LoginController.blackListToken.add(token);
-        System.out.println("THE BLACK LIST " + LoginController.blackListToken.toString());
+        TokenManager.blackListToken.add(token);
     }
 
     private String verified(String urlString) throws IOException {

@@ -2,26 +2,27 @@ package com.esliceu.keep_it_safe.filters;
 
 
 import com.esliceu.keep_it_safe.managers.TokenManager;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-
+@Component
 public class TokenInterceptor extends HandlerInterceptorAdapter {
 
     private final String HEADER_AUTHORIZATION = "Authorization";
+    private final String IS_THE_REQUES = "IsTheRequest";
     private final String BEARER_PREFIX = "Bearer";
+
+    @Autowired
+    private TokenManager tokenManager;
 
     @Value("${jwt.key}")
     private String SECRET_KEY;
@@ -32,27 +33,36 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         System.out.println("HOLA, SOY EL INTERCEPTOR DE BACKEND");
 
         try {
+            String isTheRequest = request.getHeader(IS_THE_REQUES);
+            System.out.println(isTheRequest);
 
-            // TODO: Null pointer exception
+            if (isTheRequest != null && isTheRequest.equals("true")) {
+                String authenticationHeader = request.getHeader(HEADER_AUTHORIZATION);
+                if (authenticationHeader.startsWith(BEARER_PREFIX)) {
+                    List<String> blackList = TokenManager.blackListToken;
 
-            String authenticationHeader = request.getHeader(HEADER_AUTHORIZATION);
-            System.out.println(authenticationHeader);
+                    String token = authenticationHeader.split(" ")[1];
 
-            if (!authenticationHeader.startsWith(BEARER_PREFIX)) {
-                // Si no tiene el prefijo Bearer, Unauthorized.
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                System.out.println("UNAUTHORIZED REQUEST");
-                return false;
-            } else {
+                    System.out.println(token);
 
-                // TODO: Verificarlo
-                String token = request.getHeader("Authorization");
-                System.out.println(token);
+                    if (blackList.contains(token)) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    } else {
 
-
-                return true;
+                        String[] tokenVerified = tokenManager.validateToken(token + "wbfowef");
+                        if (tokenVerified != null) {
+                            response.setHeader("user", tokenVerified[0]);
+                            response.setHeader("token", tokenVerified[1]);
+                        } else {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        }
+                    }
+                } else {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    System.out.println("UNAUTHORIZED REQUEST");
+                }
             }
-
+            return true;
         } catch (JwtException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
@@ -61,15 +71,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         return false;
 
     }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-                           ModelAndView modelAndView) throws Exception {
-
-        System.out.print("POST HANDLE INTERCEPTOR METHOD");
-
-    }
-
 
 
 }
