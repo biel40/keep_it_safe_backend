@@ -17,7 +17,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 @RestController
 public class MainController {
 
@@ -39,12 +38,16 @@ public class MainController {
         return (List<Luggage>) this.luggageRepository.findAll();
     }
 
+    @RequestMapping(value = "/luggages", method = RequestMethod.POST)
+    public void FOO(@RequestBody     Luggage luggage) {
+
+    }
+
 
 
     @RequestMapping(value = "/luggages/price", method = RequestMethod.PUT)
     public ResponseEntity changePrices(@RequestBody List<Luggage> luggages){
         try {
-            System.out.println(luggages.toString());
             luggageRepository.saveAll(luggages);
             return new ResponseEntity(HttpStatus.OK);
         } catch (RuntimeException e) {

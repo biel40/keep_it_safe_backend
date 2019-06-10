@@ -45,7 +45,6 @@ public class LoginController {
     private JsonManager jsonManager;
     private UserManager userManager;
 
-    public static List<String> blackListToken = new ArrayList<>();
 
     @Autowired
     public LoginController(UserRepository userRepository, TokenManager tokenManager, JsonManager jsonManager, UserManager userManager) {
@@ -119,12 +118,9 @@ public class LoginController {
     public ResponseEntity<String[]> verifiedToken(@RequestBody String token) {
 
         // El token que recibe aqui esta mal formado
-        System.out.println("This is de token Received: " + token);
-
         String jwt[] = tokenManager.validateToken(token);
 
         if(jwt != null) {
-            System.out.println("This is de token I send: " + jwt[0]+ ", Token = "+ jwt[1]);
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
@@ -132,9 +128,7 @@ public class LoginController {
 
     @RequestMapping(value = "/logOut", method = RequestMethod.POST)
     public void logOut(@RequestBody String token) {
-        System.out.println("Token to purge HAHAHA -> " + token );
-        LoginController.blackListToken.add(token);
-        System.out.println("THE BLACK LIST " + LoginController.blackListToken.toString());
+        TokenManager.blackListToken.add(token);
     }
 
     private String verified(String urlString) throws IOException {
