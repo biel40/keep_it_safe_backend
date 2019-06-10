@@ -33,8 +33,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 
         try {
 
-            // TODO: Null poimter exception, no coge bien la cabecera.
-            // Intuyo que puede ser por el WithCredentials = true.
+            // TODO: Null pointer exception
 
             String authenticationHeader = request.getHeader(HEADER_AUTHORIZATION);
             System.out.println(authenticationHeader);

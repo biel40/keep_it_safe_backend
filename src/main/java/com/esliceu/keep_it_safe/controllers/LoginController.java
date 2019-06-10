@@ -116,7 +116,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/token/verify", method = RequestMethod.POST)
-    public ResponseEntity<String[]> verifiedToken(@RequestBody String token) {
+    public ResponseEntity<String[]> verifiedToken(@RequestBody String token, HttpServletResponse response) {
 
         // El token que recibe aqui esta mal formado
         System.out.println("This is de token Received: " + token);
@@ -125,6 +125,7 @@ public class LoginController {
 
         if(jwt != null) {
             System.out.println("This is de token I send: " + jwt[0]+ ", Token = "+ jwt[1]);
+            response.addHeader("Access-Control-Allow-Credentials", "true");
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         } else return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
