@@ -54,7 +54,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     } else {
 
-                        String[] tokenVerified = tokenManager.validateToken(token + "wbfowef");
+                        String[] tokenVerified = tokenManager.validateToken(token);
 
                         if (tokenVerified != null) {
                             response.setHeader("user", tokenVerified[0]);
