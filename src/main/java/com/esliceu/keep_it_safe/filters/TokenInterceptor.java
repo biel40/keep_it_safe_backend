@@ -6,9 +6,7 @@ import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,7 +16,7 @@ import java.util.List;
 public class TokenInterceptor extends HandlerInterceptorAdapter {
 
     private final String HEADER_AUTHORIZATION = "Authorization";
-    private final String IS_THE_REQUES = "IsTheRequest";
+    private final String IS_THE_REQUEST = "IsTheRequest";
     private final String BEARER_PREFIX = "Bearer";
 
     @Autowired
@@ -33,12 +31,19 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         System.out.println("HOLA, SOY EL INTERCEPTOR DE BACKEND");
 
         try {
-            String isTheRequest = request.getHeader(IS_THE_REQUES);
+
+            String isTheRequest = request.getHeader(IS_THE_REQUEST);
+
+            System.out.println(request);
             System.out.println(isTheRequest);
+            // No consigo obtener la RequestHeader isTheRequest aquí.
+            // Habría que mandar la header con cada petición.
 
             if (isTheRequest != null && isTheRequest.equals("true")) {
+
                 String authenticationHeader = request.getHeader(HEADER_AUTHORIZATION);
                 if (authenticationHeader.startsWith(BEARER_PREFIX)) {
+
                     List<String> blackList = TokenManager.blackListToken;
 
                     String token = authenticationHeader.split(" ")[1];
@@ -50,6 +55,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                     } else {
 
                         String[] tokenVerified = tokenManager.validateToken(token + "wbfowef");
+
                         if (tokenVerified != null) {
                             response.setHeader("user", tokenVerified[0]);
                             response.setHeader("token", tokenVerified[1]);

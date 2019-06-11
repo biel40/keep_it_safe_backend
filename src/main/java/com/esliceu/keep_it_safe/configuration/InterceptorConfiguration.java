@@ -19,7 +19,9 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors (InterceptorRegistry registry) {
-        registry.addInterceptor(getInterceptor()).excludePathPatterns("/login/local", "/user", "/oAuth/google", "/forwardLoginGoogle", "/token/verify");
+        registry.addInterceptor(getInterceptor())
+                .excludePathPatterns("/login/local", "/user", "/oAuth/google", "/forwardLoginGoogle", "/token/verify", "/login");
+
     }
 
 
