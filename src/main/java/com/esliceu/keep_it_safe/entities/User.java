@@ -1,5 +1,9 @@
 package com.esliceu.keep_it_safe.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -17,7 +21,7 @@ public class User {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "rol")
     private RolUser rol_user;
 
     private String name;
@@ -26,6 +30,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Invoice> invoices;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<Comment> comments;
 
     public long getUser_id() { return user_id; }
 
@@ -71,6 +78,14 @@ public class User {
         this.invoices = invoices;
     }
 
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -78,6 +93,8 @@ public class User {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+
 
     @Override
     public String toString() {

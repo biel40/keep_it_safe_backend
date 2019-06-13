@@ -1,5 +1,6 @@
 package com.esliceu.keep_it_safe.configuration;
 
+import com.esliceu.keep_it_safe.entities.Comment;
 import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.Luggage;
 import com.esliceu.keep_it_safe.entities.User;
@@ -22,6 +23,11 @@ public class BeansConfiguration {
     @Bean
     @Scope("prototype")
     public Invoice invoice(){ return new Invoice();}
+
+    @Bean
+    @Scope("prototype")
+    public Comment comment(){return new Comment();}
+
 
     @Bean
     public Gson gson(){ return new Gson();}

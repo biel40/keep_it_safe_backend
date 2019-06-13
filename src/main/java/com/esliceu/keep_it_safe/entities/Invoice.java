@@ -102,22 +102,27 @@ public class Invoice {
 
     @Override
     public String toString(){
-        System.out.println(this.start_date.toInstant());
-        return  "{\"invoice_id\": "+this.invoice_id+", \"total_price\": "+this.total_price+"," +
-                " \"end_date\": \""+this.end_date.toInstant()+"\", " +
-                "\"start_date\":" + " \""+this.start_date.toInstant()+"\", " +
-                "\"user\":"+this.user.toString()+","+
-                "\"luggages\":"+this.getJsonFormatLuggages()+"}";
+        return  "{\"invoice_id\": " + this.invoice_id+", \"total_price\": " + this.total_price+"," +
+                " \"end_date\": \"" + this.end_date.toInstant()+"\", " +
+                "\"start_date\":" + " \"" + this.start_date.toInstant()+"\", " +
+                "\"user\":" + this.user.toString()+"," +
+                "\"luggages\":" + this.getJsonFormatLuggages() + "}";
     }
 
     private String getJsonFormatLuggages(){
+
         StringBuilder luggagesToJSON = new StringBuilder();
+
         luggagesToJSON.append("[");
+
         for (Luggage luggage : this.luggages) {
             luggagesToJSON.append(luggage.toString());
             luggagesToJSON.append(",");
-        }luggagesToJSON.deleteCharAt(luggagesToJSON.length()-1);
+        }
+
+        luggagesToJSON.deleteCharAt(luggagesToJSON.length()-1);
         luggagesToJSON.append("]");
+
         return luggagesToJSON.toString();
     }
 }
