@@ -1,6 +1,7 @@
 package com.esliceu.keep_it_safe;
 
 import com.esliceu.keep_it_safe.entities.*;
+import com.esliceu.keep_it_safe.repository.CommentRepository;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import com.esliceu.keep_it_safe.repository.UserRepository;
@@ -21,13 +22,15 @@ public class MockDatabase {
     private UserRepository userRepository;
     private LuggageRepository luggageRepository;
     private InvoiceRepository invoiceRepository;
+    private CommentRepository commentRepository;
     private ApplicationContext context;
 
     @Autowired
-    public MockDatabase(UserRepository userRepository, LuggageRepository luggageRepository, InvoiceRepository invoiceRepository, ApplicationContext context) {
+    public MockDatabase(UserRepository userRepository, LuggageRepository luggageRepository, InvoiceRepository invoiceRepository, CommentRepository commentRepository, ApplicationContext context) {
         this.userRepository = userRepository;
         this.luggageRepository = luggageRepository;
         this.invoiceRepository = invoiceRepository;
+        this.commentRepository = commentRepository;
         this.context = context;
     }
 
@@ -126,9 +129,6 @@ public class MockDatabase {
 
         luggages.clear();
 
-
-
-
         Invoice invoice_3 = context.getBean(Invoice.class);
         invoice_3.setTotal_price(32.96);
         invoice_3.setStart_date(calendarCurrentTime);
@@ -142,6 +142,33 @@ public class MockDatabase {
         luggages.add(bigLuggage);
         invoice_3.setLuggages(luggages);
         invoiceRepository.save(invoice_3);
+
+
+        Comment comment1 = context.getBean(Comment.class);
+        comment1.setComment_text("HOLA SOY UN PUTO COMENTARIO");
+        commentRepository.save(comment1);
+        comment1.setUser(client_1);
+        commentRepository.save(comment1);
+
+
+        Comment comment2 = context.getBean(Comment.class);
+        comment2.setComment_text("Comentario genérico para testear la aplicación de Keep It Safe");
+        commentRepository.save(comment2);
+        comment2.setUser(client_2);
+        commentRepository.save(comment2);
+
+        Comment comment3 = context.getBean(Comment.class);
+        comment3.setComment_text("Hola k ase premoh");
+        commentRepository.save(comment3);
+        comment3.setUser(client_1);
+        commentRepository.save(comment3);
+
+        // Comentario sin usuario para probar.
+        Comment comment4 = context.getBean(Comment.class);
+        comment4.setComment_text("COMENTARIO SIN USUARIO XD");
+        commentRepository.save(comment4);
+
+
     }
 
     private Calendar addDay(Date date, int days) {

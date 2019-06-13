@@ -50,11 +50,13 @@ public class TokenManager {
                 Date date = new Date(System.currentTimeMillis() + 3600000);
                 claims.setExpiration(date);
 
-                return new String[]{new Gson().toJson(claims), this.refreshToken(claims)};
+                String userInfoJson = new Gson().toJson(claims);
+
+                return new String[]{userInfoJson, this.refreshToken(claims)};
+
             } else  {
                 return null;
             }
-
 
         } catch (io.jsonwebtoken.JwtException e) {
             System.out.println(e);
@@ -98,7 +100,7 @@ public class TokenManager {
     }
 
     @Scheduled(fixedRate = 3600000)
-    private void despertar() {
+    private void removeOldTokens() {
         List<String> tokensToRemove = new ArrayList<>();
         for(String token : TokenManager.blackListToken) {
             boolean isValid = this.validateTokenExpired(token);
