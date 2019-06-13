@@ -1,5 +1,6 @@
 package com.esliceu.keep_it_safe.managers;
 
+import com.esliceu.keep_it_safe.Constants;
 import com.esliceu.keep_it_safe.entities.User;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
@@ -47,7 +48,7 @@ public class TokenManager {
 
             if(this.isExpiredToken(claims)){
 
-                Date date = new Date(System.currentTimeMillis() + 3600000);
+                Date date = new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN);
                 claims.setExpiration(date);
 
                 String userInfoJson = new Gson().toJson(claims);
@@ -81,7 +82,7 @@ public class TokenManager {
 
     private boolean isExpiredToken(Claims claims){
         Date expiration_token = claims.getExpiration();
-        Date now = new Date(System.currentTimeMillis() + 3600000);
+        Date now = new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN);
         return !now.before(expiration_token);
     }
 
@@ -93,13 +94,13 @@ public class TokenManager {
                 .claim("surnames", claims.get("surnames"))
                 .claim("imageUrl", claims.get("imageUrl"))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .setExpiration(new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
 
         return token;
     }
 
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = Constants.EXPIRATION_TOKEN)
     private void removeOldTokens() {
         List<String> tokensToRemove = new ArrayList<>();
         for(String token : TokenManager.blackListToken) {
