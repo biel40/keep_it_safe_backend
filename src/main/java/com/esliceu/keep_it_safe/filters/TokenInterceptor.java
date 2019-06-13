@@ -28,16 +28,11 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
-        System.out.println("HOLA, SOY EL INTERCEPTOR DE BACKEND");
+        System.out.println("Backend interceptor!");
 
         try {
 
             String isTheRequest = request.getHeader(IS_THE_REQUEST);
-
-            System.out.println(request);
-            System.out.println(isTheRequest);
-            // No consigo obtener la RequestHeader isTheRequest aquí.
-            // Habría que mandar la header con cada petición.
 
             if (isTheRequest != null && isTheRequest.equals("true")) {
 
@@ -54,7 +49,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     } else {
 
-                        String[] tokenVerified = tokenManager.validateToken(token + "wbfowef");
+                        String[] tokenVerified = tokenManager.validateToken(token);
 
                         if (tokenVerified != null) {
                             response.setHeader("user", tokenVerified[0]);
@@ -65,7 +60,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                     }
                 } else {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    System.out.println("UNAUTHORIZED REQUEST");
                 }
             }
             return true;
