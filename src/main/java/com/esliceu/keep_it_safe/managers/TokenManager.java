@@ -7,12 +7,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+@EnableScheduling
 @Component
 public class TokenManager {
     public static List<String> blackListToken = new ArrayList<>();
@@ -43,15 +45,42 @@ public class TokenManager {
                     .parseClaimsJws(token.replace("Bearer ", ""))
                     .getBody();
 
-            Date date = new Date(System.currentTimeMillis() + 3600000);
-            claims.setExpiration(date);
+            if(this.isExpiredToken(claims)){
 
-            return new String[]{new Gson().toJson(claims), this.refreshToken(claims)};
+                Date date = new Date(System.currentTimeMillis() + 3600000);
+                claims.setExpiration(date);
+
+                return new String[]{new Gson().toJson(claims), this.refreshToken(claims)};
+            } else  {
+                return null;
+            }
+
 
         } catch (io.jsonwebtoken.JwtException e) {
             System.out.println(e);
             return null;
         }
+    }
+
+    private boolean validateTokenExpired(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(SECRET_KEY.getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return this.isExpiredToken(claims);
+
+        } catch (io.jsonwebtoken.JwtException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    private boolean isExpiredToken(Claims claims){
+        Date expiration_token = claims.getExpiration();
+        Date now = new Date(System.currentTimeMillis() + 3600000);
+        return !now.before(expiration_token);
     }
 
     private String refreshToken(Claims claims) {
@@ -66,5 +95,17 @@ public class TokenManager {
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
 
         return token;
+    }
+
+    @Scheduled(fixedRate = 3600000)
+    private void despertar() {
+        List<String> tokensToRemove = new ArrayList<>();
+        for(String token : TokenManager.blackListToken) {
+            boolean isValid = this.validateTokenExpired(token);
+            if (!isValid) {
+                tokensToRemove.add(token);
+            }
+        }
+        TokenManager.blackListToken.removeAll(tokensToRemove);
     }
 }
