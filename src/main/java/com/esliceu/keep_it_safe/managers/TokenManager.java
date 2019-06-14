@@ -46,7 +46,7 @@ public class TokenManager {
                     .parseClaimsJws(token.replace("Bearer ", ""))
                     .getBody();
 
-            if(this.isExpiredToken(claims)){
+            if(!this.isExpiredToken(claims)){
 
                 Date date = new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN);
                 claims.setExpiration(date);
