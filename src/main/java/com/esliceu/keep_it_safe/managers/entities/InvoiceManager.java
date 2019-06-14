@@ -28,7 +28,7 @@ public class InvoiceManager {
         invoicesToJSON.append("[");
 
         for (Invoice invoice: invoices) {
-            invoicesToJSON.append(invoice.toString() +",");
+            invoicesToJSON.append(invoice.stringToJSON() +",");
         }
 
         invoicesToJSON.deleteCharAt(invoicesToJSON.length()-1);

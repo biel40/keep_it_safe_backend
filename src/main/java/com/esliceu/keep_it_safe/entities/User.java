@@ -96,8 +96,8 @@ public class User {
 
 
 
-    @Override
-    public String toString() {
+
+    public String stringToJSON() {
         return  "{\"user_id\":"+this.user_id+"," +
                 "\"email\":\""+this.email+"\", " +
                 "\"name\":\""+this.name+"\", "+

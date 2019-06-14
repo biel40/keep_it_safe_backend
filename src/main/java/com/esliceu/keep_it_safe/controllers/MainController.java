@@ -88,7 +88,8 @@ public class MainController {
     @RequestMapping(value = "/comments", method = RequestMethod.GET)
     public ResponseEntity getComments(){
 
-        List<Comment> comments = commentManager.getCommentsByUser(userRepository.findByEmail("client_1@gmail.com"));
+        // Cambiar esto por el usuario que se quiera
+        List<Comment> comments = commentManager.getAllComments();
 
         if(!comments.isEmpty()){
             return new ResponseEntity(commentManager.commentsToJSON(comments), HttpStatus.OK);

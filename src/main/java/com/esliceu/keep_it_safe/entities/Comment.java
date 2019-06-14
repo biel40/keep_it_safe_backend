@@ -40,10 +40,13 @@ public class Comment {
         this.user = user;
     }
 
-    @Override
-    public String toString() {
+
+    public String stringToJSON() {
+
+        String stringUser = this.user == null ? "null" : this.user.stringToJSON();
+
         return  "{\"comment_id\":" + this.comment_id + "," +
                 "\"comment_text\":\"" + this.comment_text + "\"," +
-                "\"user\":\"" + this.user + "\"}";
+                "\"user\":" + stringUser + "}";
     }
 }

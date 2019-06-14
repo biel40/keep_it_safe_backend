@@ -100,12 +100,12 @@ public class Invoice {
         this.user = user;
     }
 
-    @Override
-    public String toString(){
+
+    public String stringToJSON(){
         return  "{\"invoice_id\": " + this.invoice_id+", \"total_price\": " + this.total_price+"," +
                 " \"end_date\": \"" + this.end_date.toInstant()+"\", " +
                 "\"start_date\":" + " \"" + this.start_date.toInstant()+"\", " +
-                "\"user\":" + this.user.toString()+"," +
+                "\"user\":" + this.user.stringToJSON() + "," +
                 "\"luggages\":" + this.getJsonFormatLuggages() + "}";
     }
 
@@ -116,7 +116,7 @@ public class Invoice {
         luggagesToJSON.append("[");
 
         for (Luggage luggage : this.luggages) {
-            luggagesToJSON.append(luggage.toString());
+            luggagesToJSON.append(luggage.stringToJSON());
             luggagesToJSON.append(",");
         }
 

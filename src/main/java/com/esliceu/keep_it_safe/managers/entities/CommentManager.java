@@ -49,7 +49,7 @@ public class CommentManager {
         commentsToJSON.append("[");
 
         for (Comment comment : comments) {
-            commentsToJSON.append(comment.toString() +",");
+            commentsToJSON.append(comment.stringToJSON() +",");
         }
 
         commentsToJSON.deleteCharAt(commentsToJSON.length() - 1);
@@ -57,5 +57,9 @@ public class CommentManager {
 
         return commentsToJSON.toString();
 
+    }
+
+    public List<Comment> getAllComments() {
+        return (List<Comment>) commentRepository.findAll();
     }
 }
