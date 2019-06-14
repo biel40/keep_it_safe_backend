@@ -31,7 +31,7 @@ public class TokenManager {
                 .claim("surnames", user.getSurnames())
                 .claim("imageUrl", user.getImageUrl())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .setExpiration(new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
 
         return token;
@@ -82,7 +82,7 @@ public class TokenManager {
 
     private boolean isExpiredToken(Claims claims){
         Date expiration_token = claims.getExpiration();
-        Date now = new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN);
+        Date now = new Date(System.currentTimeMillis());
         return !now.before(expiration_token);
     }
 
