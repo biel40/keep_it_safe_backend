@@ -79,8 +79,8 @@ public class Luggage {
     }
 
 
-    @Override
-    public String toString() {
+
+    public String stringToJSON() {
 
         return "{\"luggage_type\": \"" + this.luggage_type + "\", \"deep_dimension\": " + this.deep_dimension + ", " +
                 "\"high_dimension\":" + this.high_dimension + ", \"width_dimension\":" + this.width_dimension + ", " +

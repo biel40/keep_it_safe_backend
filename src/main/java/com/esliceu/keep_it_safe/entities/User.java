@@ -1,9 +1,5 @@
 package com.esliceu.keep_it_safe.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -96,8 +92,8 @@ public class User {
 
 
 
-    @Override
-    public String toString() {
+
+    public String stringToJSON() {
         return  "{\"user_id\":"+this.user_id+"," +
                 "\"email\":\""+this.email+"\", " +
                 "\"name\":\""+this.name+"\", "+
