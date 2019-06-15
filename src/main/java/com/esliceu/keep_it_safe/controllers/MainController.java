@@ -4,6 +4,7 @@ import com.esliceu.keep_it_safe.entities.Comment;
 import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.Luggage;
 import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.managers.JsonManager;
 import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
 import com.esliceu.keep_it_safe.repository.CommentRepository;
@@ -104,15 +105,23 @@ public class MainController {
 
         try {
 
-            User user = userRepository.findByEmail(comment.getUser().getEmail());
+            User user = null;
 
-            // Si no hay usuario
-            if(user != null) {
+            if(comment.getUser() != null){
+
+                 user = userRepository.findByEmail(comment.getUser().getEmail());
+                 System.out.println("Usuario --> " + user.toString());
+
+            }
+
+            if (user != null) {
                 comment.setUser(user);
             }
 
             commentManager.saveCommentInDataBase(comment);
+
             return new ResponseEntity(HttpStatus.CREATED);
+
         } catch (RuntimeException e) {
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
