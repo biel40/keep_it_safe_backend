@@ -82,6 +82,13 @@ public class MainController {
         return invoiceManager.invoicesToJSON(currentInvoices);
     }
 
+    @RequestMapping(value = "/invoice", method = RequestMethod.POST)
+    public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
+        System.out.println("THE USER ->> " + invoice.getUser());
+        invoiceManager.saveInvoice(invoice);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
     /* COMMENTS */
 
     // HAY QUE ACORDARSE DE EXPLICAR PORQUE HACEMOS LA CONVERSIÓN A JSON MANUAL.
