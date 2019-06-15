@@ -14,7 +14,7 @@ public class InvoiceManager {
     private LuggageManager luggageManager;
     private UserManager userManager;
 
-    @Autowired
+
     public InvoiceManager(InvoiceRepository invoiceRepository, LuggageManager luggageManager, UserManager userManager) {
         this.invoiceRepository = invoiceRepository;
         this.luggageManager = luggageManager;
