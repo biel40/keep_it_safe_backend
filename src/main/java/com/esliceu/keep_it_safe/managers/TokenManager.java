@@ -18,7 +18,9 @@ import java.util.List;
 @EnableScheduling
 @Component
 public class TokenManager {
+
     public static List<String> blackListToken = new ArrayList<>();
+
     @Value("${jwt.key}")
     private String SECRET_KEY;
 
@@ -26,6 +28,7 @@ public class TokenManager {
 
         String token = Jwts
                 .builder()
+                .claim("email", user.getEmail())
                 .claim("rol", user.getRol_user())
                 .claim("name", user.getName())
                 .claim("surnames", user.getSurnames())
@@ -89,6 +92,7 @@ public class TokenManager {
     private String refreshToken(Claims claims) {
         String token = Jwts
                 .builder()
+                .claim("email", claims.get("email"))
                 .claim("rol", claims.get("rol"))
                 .claim("name", claims.get("name"))
                 .claim("surnames", claims.get("surnames"))

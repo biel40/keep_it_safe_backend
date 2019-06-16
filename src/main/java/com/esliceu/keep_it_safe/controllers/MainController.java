@@ -4,13 +4,10 @@ import com.esliceu.keep_it_safe.entities.Comment;
 import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.Luggage;
 import com.esliceu.keep_it_safe.entities.User;
-import com.esliceu.keep_it_safe.managers.JsonManager;
 import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
-import com.esliceu.keep_it_safe.repository.CommentRepository;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import com.esliceu.keep_it_safe.repository.UserRepository;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +43,6 @@ public class MainController {
     public void FOO(@RequestBody Luggage luggage) {
 
     }
-
 
     @RequestMapping(value = "/luggages/price", method = RequestMethod.PUT)
     public ResponseEntity changePrices(@RequestBody List<Luggage> luggages){
@@ -114,15 +110,16 @@ public class MainController {
 
             User user = null;
 
+            System.out.println(comment.getUser().stringToJSON());
             if(comment.getUser() != null){
 
                  user = userRepository.findByEmail(comment.getUser().getEmail());
-                 System.out.println("Usuario --> " + user.toString());
-
+                 System.out.println("Usuario");
             }
 
             if (user != null) {
                 comment.setUser(user);
+                System.out.println("Asignamos el user al comentario");
             }
 
             commentManager.saveCommentInDataBase(comment);

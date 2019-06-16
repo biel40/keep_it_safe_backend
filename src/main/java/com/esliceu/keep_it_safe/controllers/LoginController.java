@@ -115,7 +115,6 @@ public class LoginController {
     @RequestMapping(value = "/token/verify", method = RequestMethod.POST)
     public ResponseEntity<String[]> verifiedToken(@RequestBody String token) {
 
-        // El token que recibe aqui esta mal formado
         String jwt[] = tokenManager.validateToken(token);
 
         if(jwt != null) {

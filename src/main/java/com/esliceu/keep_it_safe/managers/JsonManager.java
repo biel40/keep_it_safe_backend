@@ -29,6 +29,7 @@ public class JsonManager {
         String name = googleUser.get("name").getAsJsonObject().get("givenName").toString().replace("\"", "");
         String imageUrl = googleUser.get("image").getAsJsonObject().get("url").toString().replace("\"", "");
 
+        System.out.println(email);
         return this.createUser(email, name, surnames, imageUrl);
 
     }
