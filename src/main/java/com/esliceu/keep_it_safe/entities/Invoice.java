@@ -27,7 +27,6 @@ public class Invoice {
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
-
     private Calendar end_date;
 
     @Column(nullable = false)
@@ -102,10 +101,11 @@ public class Invoice {
 
 
     public String stringToJSON(){
-        return  "{\"invoice_id\": " + this.invoice_id+", \"total_price\": " + this.total_price+"," +
+        return  "{\"invoice_id\": " + this.invoice_id + ", \"total_price\": " + this.total_price+"," +
                 " \"end_date\": \"" + this.end_date.toInstant()+"\", " +
                 "\"start_date\":" + " \"" + this.start_date.toInstant()+"\", " +
                 "\"user\":" + this.user.stringToJSON() + "," +
+                "\"isVerified\":" + this.isVerified + "," +
                 "\"luggages\":" + this.getJsonFormatLuggages() + "}";
     }
 

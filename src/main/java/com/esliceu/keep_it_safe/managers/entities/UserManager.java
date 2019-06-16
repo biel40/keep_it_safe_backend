@@ -1,5 +1,6 @@
 package com.esliceu.keep_it_safe.managers.entities;
 
+import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,10 @@ public class UserManager {
     public User getUserByEmailAndPassword(String email, String password) {
         User user = userRepository.findByEmailAndPassword(email, password);
         return user;
+    }
+
+    public User getUserByInvoice(Invoice invoice){
+        return userRepository.findByInvoices(invoice);
     }
 
     public void saveUser(User user) throws Exception {

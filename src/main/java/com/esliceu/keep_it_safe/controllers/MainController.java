@@ -11,10 +11,7 @@ import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -83,17 +80,49 @@ public class MainController {
         return invoiceManager.invoicesToJSON(currentInvoices);
     }
 
+
+    @RequestMapping(value = "/invoice/user/notVerified", method = RequestMethod.GET)
+    public String getClientReservations(@RequestBody User user) {
+
+        System.out.println(user);
+
+        List<Invoice> allInvoicesFromClient = this.invoiceManager.getInvoicesByUser(user);
+        List<Invoice> filteredInvoices = new LinkedList<>();
+
+        for(Invoice invoice : allInvoicesFromClient) {
+            if(!invoice.isVerified()) {
+                filteredInvoices.add(invoice);
+            }
+        }
+
+        return invoiceManager.invoicesToJSON(filteredInvoices);
+
+    }
+
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
         System.out.println("THE USER ->> " + invoice.getUser());
         User user = userManager.getUserByEmail(invoice.getUser().getEmail());
+
         invoiceManager.saveInvoice(invoice);
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/invoice", method = RequestMethod.DELETE)
+    public ResponseEntity deleteInvoice(@RequestParam int id_invoice) {
+        System.out.println();
+        try {
+            invoiceManager.deleteInvoice(id_invoice);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
     /* COMMENTS */
 
-    // HAY QUE ACORDARSE DE EXPLICAR PORQUE HACEMOS LA CONVERSIÓN A JSON MANUAL.
+
     @RequestMapping(value = "/comments", method = RequestMethod.GET)
     public ResponseEntity getComments(){
 
@@ -112,7 +141,7 @@ public class MainController {
     public ResponseEntity insertComment(@RequestBody Comment comment) {
 
         try {
-
+            System.out.println("INSERTANDO COMENTARIO");
             User user = null;
 
             System.out.println(comment.getUser().stringToJSON());
@@ -124,7 +153,6 @@ public class MainController {
 
             if (user != null) {
                 comment.setUser(user);
-                System.out.println("Asignamos el user al comentario");
             }
 
             commentManager.saveCommentInDataBase(comment);
