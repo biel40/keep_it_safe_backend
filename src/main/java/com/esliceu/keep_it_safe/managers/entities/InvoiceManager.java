@@ -3,9 +3,9 @@ package com.esliceu.keep_it_safe.managers.entities;
 import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class InvoiceManager {
@@ -13,7 +13,6 @@ public class InvoiceManager {
     private InvoiceRepository invoiceRepository;
     private LuggageManager luggageManager;
     private UserManager userManager;
-
 
     public InvoiceManager(InvoiceRepository invoiceRepository, LuggageManager luggageManager, UserManager userManager) {
         this.invoiceRepository = invoiceRepository;
@@ -47,5 +46,14 @@ public class InvoiceManager {
         invoiceRepository.save(invoice);
     }
 
+    public void deleteInvoice(int id_invoice) {
+        Optional<Invoice> invoice = invoiceRepository.findById(id_invoice);
+        invoiceRepository.delete(invoice.get());
+    }
+
     public Invoice getInvoiceById(int id) { return this.invoiceRepository.findById(id).orElse(null); }
+
+    public List<Invoice> getInvoicesByUser(User user) {
+        return invoiceRepository.findByUser(user);
+    }
 }

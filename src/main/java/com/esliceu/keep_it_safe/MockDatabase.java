@@ -68,7 +68,6 @@ public class MockDatabase {
         admin.setEmail("admin@gmail.com");
         userRepository.save(admin);
 
-
         Luggage smallLuggage = context.getBean(Luggage.class);
         smallLuggage.setLuggage_type(LuggageType.SMALL);
         smallLuggage.setPrice(4.20);

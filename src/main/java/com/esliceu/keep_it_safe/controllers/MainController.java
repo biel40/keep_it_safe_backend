@@ -79,16 +79,46 @@ public class MainController {
         return invoiceManager.invoicesToJSON(currentInvoices);
     }
 
+
+    @RequestMapping(value = "/invoice/user/notVerified", method = RequestMethod.GET)
+    public String getClientReservations(@RequestBody User user) {
+
+        System.out.println(user);
+
+        List<Invoice> allInvoicesFromClient = this.invoiceManager.getInvoicesByUser(user);
+        List<Invoice> filteredInvoices = new LinkedList<>();
+
+        for(Invoice invoice : allInvoicesFromClient) {
+            if(!invoice.isVerified()) {
+                filteredInvoices.add(invoice);
+            }
+        }
+
+        return invoiceManager.invoicesToJSON(filteredInvoices);
+
+    }
+
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
-        System.out.println("THE USER ->> " + invoice.getUser());
         invoiceManager.saveInvoice(invoice);
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/invoice", method = RequestMethod.DELETE)
+    public ResponseEntity deleteInvoice(@RequestParam int id_invoice) {
+        System.out.println();
+        try {
+            invoiceManager.deleteInvoice(id_invoice);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
     /* COMMENTS */
 
-    // HAY QUE ACORDARSE DE EXPLICAR PORQUE HACEMOS LA CONVERSIÓN A JSON MANUAL.
+
     @RequestMapping(value = "/comments", method = RequestMethod.GET)
     public ResponseEntity getComments(){
 
@@ -107,19 +137,15 @@ public class MainController {
     public ResponseEntity insertComment(@RequestBody Comment comment) {
 
         try {
-
+            System.out.println("INSERTANDO COMENTARIO");
             User user = null;
 
-            System.out.println(comment.getUser().stringToJSON());
-            if(comment.getUser() != null){
-
+            if (comment.getUser() != null){
                  user = userRepository.findByEmail(comment.getUser().getEmail());
-                 System.out.println("Usuario");
             }
 
             if (user != null) {
                 comment.setUser(user);
-                System.out.println("Asignamos el user al comentario");
             }
 
             commentManager.saveCommentInDataBase(comment);
