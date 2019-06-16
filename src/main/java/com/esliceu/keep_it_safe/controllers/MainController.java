@@ -144,7 +144,6 @@ public class MainController {
             System.out.println("INSERTANDO COMENTARIO");
             User user = null;
 
-            System.out.println(comment.getUser().stringToJSON());
             if(comment.getUser() != null){
 
                  user = userManager.getUserByEmail(comment.getUser().getEmail());
