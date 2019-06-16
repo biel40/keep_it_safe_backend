@@ -6,12 +6,16 @@ import com.esliceu.keep_it_safe.entities.Luggage;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
+import com.esliceu.keep_it_safe.managers.entities.UserManager;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
-import com.esliceu.keep_it_safe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,13 +25,13 @@ public class MainController {
 
     private final InvoiceManager invoiceManager;
     private final LuggageRepository luggageRepository;
-    private final UserRepository userRepository;
+    private final UserManager userManager;
     private final CommentManager commentManager;
 
     @Autowired
-    public MainController(LuggageRepository luggageRepository, UserRepository userRepository, InvoiceManager invoiceManager, CommentManager commentManager) {
+    public MainController(LuggageRepository luggageRepository, UserManager userManager, InvoiceManager invoiceManager, CommentManager commentManager) {
         this.luggageRepository = luggageRepository;
-        this.userRepository = userRepository;
+        this.userManager = userManager;
         this.invoiceManager = invoiceManager;
         this.commentManager = commentManager;
     }
@@ -82,6 +86,7 @@ public class MainController {
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
         System.out.println("THE USER ->> " + invoice.getUser());
+        User user = userManager.getUserByEmail(invoice.getUser().getEmail());
         invoiceManager.saveInvoice(invoice);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -113,7 +118,7 @@ public class MainController {
             System.out.println(comment.getUser().stringToJSON());
             if(comment.getUser() != null){
 
-                 user = userRepository.findByEmail(comment.getUser().getEmail());
+                 user = userManager.getUserByEmail(comment.getUser().getEmail());
                  System.out.println("Usuario");
             }
 
@@ -134,9 +139,10 @@ public class MainController {
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public ResponseEntity registerUser(@RequestBody User user) {
         try {
-            userRepository.save(user);
+            userManager.saveUser(user);
             return new ResponseEntity(HttpStatus.CREATED);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
     }
