@@ -28,8 +28,9 @@ public class TokenManager {
 
         String token = Jwts
                 .builder()
+                .claim("userId", user.getUser_id())
                 .claim("email", user.getEmail())
-                .claim("rol", user.getRol_user())
+                .claim("rol_user", user.getRol_user())
                 .claim("name", user.getName())
                 .claim("surnames", user.getSurnames())
                 .claim("imageUrl", user.getImageUrl())
@@ -92,8 +93,9 @@ public class TokenManager {
     private String refreshToken(Claims claims) {
         String token = Jwts
                 .builder()
+                .claim("userId", claims.get("userId"))
                 .claim("email", claims.get("email"))
-                .claim("rol", claims.get("rol"))
+                .claim("rol_user", claims.get("rol_user"))
                 .claim("name", claims.get("name"))
                 .claim("surnames", claims.get("surnames"))
                 .claim("imageUrl", claims.get("imageUrl"))

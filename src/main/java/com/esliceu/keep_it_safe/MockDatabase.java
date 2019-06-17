@@ -103,6 +103,7 @@ public class MockDatabase {
         Calendar calendarCurrentTime = Calendar.getInstance();
         Date currentTime = Date.from(Instant.now());
 
+
         Invoice invoice_1 = context.getBean(Invoice.class);
         invoice_1.setTotal_price(12.6);
         invoice_1.setStart_date(calendarCurrentTime);
