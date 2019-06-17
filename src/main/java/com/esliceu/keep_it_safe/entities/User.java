@@ -9,7 +9,7 @@ public class User {
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long user_id;
+    private long userId;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -30,9 +30,9 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Comment> comments;
 
-    public long getUser_id() { return user_id; }
+    public long getUser_id() { return userId; }
 
-    public void setUser_id(long user_id) { this.user_id = user_id; }
+    public void setUser_id(long user_id) { this.userId = user_id; }
 
     public String getEmail() {
         return email;
@@ -94,7 +94,7 @@ public class User {
 
 
     public String stringToJSON() {
-        return  "{\"user_id\":"+this.user_id+"," +
+        return  "{\"userId\":" + this.userId + "," +
                 "\"email\":\""+this.email+"\", " +
                 "\"name\":\""+this.name+"\", "+
                 "\"surnames\":\""+this.surnames+"\"," +

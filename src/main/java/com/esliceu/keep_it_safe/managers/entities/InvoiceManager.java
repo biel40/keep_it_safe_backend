@@ -4,6 +4,8 @@ import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import org.springframework.stereotype.Component;
+
+import javax.management.Query;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +53,13 @@ public class InvoiceManager {
         invoiceRepository.delete(invoice.get());
     }
 
+
     public Invoice getInvoiceById(int id) { return this.invoiceRepository.findById(id).orElse(null); }
 
     public List<Invoice> getInvoicesByUser(User user) {
-        return invoiceRepository.findByUser(user);
+
+        //Hacer una busqueda de las invoices por la id del usuario.
+        return this.invoiceRepository.findByuser_userId(user.getUser_id());
+
     }
 }

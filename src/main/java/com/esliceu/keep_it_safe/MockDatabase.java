@@ -100,10 +100,10 @@ public class MockDatabase {
         Invoice invoice_2 = context.getBean(Invoice.class);
         invoice_2.setTotal_price(20.64);
         invoice_2.setStart_date(calendarCurrentTime);
-        invoice_2.setEnd_date(this.addDay(currentTime, -15));
+        invoice_2.setEnd_date(this.addDay(currentTime, +4));
         invoice_2.setVerified(false);
         invoiceRepository.save(invoice_2);
-        invoice_2.setUser(client_1);
+        invoice_2.setUser(client_2);
         luggages.add(mediumLuggage);
         luggages.add(mediumLuggage);
         luggages.add(bigLuggage);

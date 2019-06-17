@@ -8,6 +8,7 @@ import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
 import com.esliceu.keep_it_safe.managers.entities.UserManager;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,9 +83,13 @@ public class MainController {
 
 
     @RequestMapping(value = "/invoice/user/notVerified", method = RequestMethod.GET)
-    public String getClientReservations(@RequestBody User user) {
+    public String getClientReservations(@RequestParam String string) {
 
-        System.out.println(user);
+        System.out.println(string);
+
+        Gson gson = new Gson();
+        User user = gson.fromJson(string, User.class);
+
 
         List<Invoice> allInvoicesFromClient = this.invoiceManager.getInvoicesByUser(user);
         List<Invoice> filteredInvoices = new LinkedList<>();
