@@ -108,6 +108,9 @@ public class MainController {
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
         System.out.println("THE USER ->> " + invoice.getUser());
         User user = userManager.getUserByEmail(invoice.getUser().getEmail());
+        if (user == null) {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
 
         invoiceManager.saveInvoice(invoice);
         return new ResponseEntity(HttpStatus.OK);
@@ -115,7 +118,6 @@ public class MainController {
 
     @RequestMapping(value = "/invoice", method = RequestMethod.DELETE)
     public ResponseEntity deleteInvoice(@RequestParam int id_invoice) {
-        System.out.println();
         try {
             invoiceManager.deleteInvoice(id_invoice);
             return new ResponseEntity(HttpStatus.OK);
