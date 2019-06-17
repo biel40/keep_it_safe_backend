@@ -1,6 +1,7 @@
 package com.esliceu.keep_it_safe;
 
 import com.esliceu.keep_it_safe.entities.*;
+import com.esliceu.keep_it_safe.managers.entities.StockManager;
 import com.esliceu.keep_it_safe.repository.CommentRepository;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
@@ -23,14 +24,19 @@ public class MockDatabase {
     private LuggageRepository luggageRepository;
     private InvoiceRepository invoiceRepository;
     private CommentRepository commentRepository;
+    private StockManager stockManager;
     private ApplicationContext context;
 
     @Autowired
-    public MockDatabase(UserRepository userRepository, LuggageRepository luggageRepository, InvoiceRepository invoiceRepository, CommentRepository commentRepository, ApplicationContext context) {
+    public MockDatabase(UserRepository userRepository, LuggageRepository luggageRepository,
+                        InvoiceRepository invoiceRepository, StockManager stockManager,
+                        CommentRepository commentRepository,
+                        ApplicationContext context) {
         this.userRepository = userRepository;
         this.luggageRepository = luggageRepository;
         this.invoiceRepository = invoiceRepository;
         this.commentRepository = commentRepository;
+        this.stockManager = stockManager;
         this.context = context;
     }
 
@@ -97,6 +103,27 @@ public class MockDatabase {
         Calendar calendarCurrentTime = Calendar.getInstance();
         Date currentTime = Date.from(Instant.now());
 
+        Invoice invoice_1 = context.getBean(Invoice.class);
+        invoice_1.setTotal_price(12.6);
+        invoice_1.setStart_date(calendarCurrentTime);
+
+        Calendar end_day = this.addDay(currentTime, 10);
+
+        this.stockManager.checkStock(calendarCurrentTime, end_day);
+
+        invoice_1.setEnd_date(end_day);
+        invoice_1.setVerified(true);
+        invoiceRepository.save(invoice_1);
+        invoice_1.setUser(client_1);
+        luggages.add(smallLuggage);
+        luggages.add(smallLuggage);
+        luggages.add(smallLuggage);
+        luggages.add(smallLuggage);
+        invoice_1.setLuggages(luggages);
+        invoiceRepository.save(invoice_1);
+
+        luggages.clear();
+
         Invoice invoice_2 = context.getBean(Invoice.class);
         invoice_2.setTotal_price(20.64);
         invoice_2.setStart_date(calendarCurrentTime);
@@ -109,22 +136,6 @@ public class MockDatabase {
         luggages.add(bigLuggage);
         invoice_2.setLuggages(luggages);
         invoiceRepository.save(invoice_2);
-
-        luggages.clear();
-
-        Invoice invoice_1 = context.getBean(Invoice.class);
-        invoice_1.setTotal_price(12.6);
-        invoice_1.setStart_date(calendarCurrentTime);
-        invoice_1.setEnd_date(this.addDay(currentTime, 10));
-        invoice_1.setVerified(true);
-        invoiceRepository.save(invoice_1);
-        invoice_1.setUser(client_1);
-        luggages.add(smallLuggage);
-        luggages.add(smallLuggage);
-        luggages.add(smallLuggage);
-        luggages.add(smallLuggage);
-        invoice_1.setLuggages(luggages);
-        invoiceRepository.save(invoice_1);
 
         luggages.clear();
 
