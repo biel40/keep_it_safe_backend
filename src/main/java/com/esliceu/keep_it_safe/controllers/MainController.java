@@ -42,7 +42,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/luggages", method = RequestMethod.POST)
-    public void FOO(@RequestBody Luggage luggage) {
+    public void insertLuggages(@RequestBody Luggage luggage) {
 
     }
 
@@ -106,7 +106,7 @@ public class MainController {
 
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
-        System.out.println("THE USER ->> " + invoice.getUser());
+
         User user = userManager.getUserByEmail(invoice.getUser().getEmail());
         if (user == null) {
             return new ResponseEntity(HttpStatus.CONFLICT);
@@ -116,10 +116,16 @@ public class MainController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/invoice", method = RequestMethod.DELETE)
-    public ResponseEntity deleteInvoice(@RequestParam int id_invoice) {
+    @RequestMapping(value = "/deleteInvoice", method = RequestMethod.POST)
+    public ResponseEntity deleteInvoice(@RequestBody String idString){
+
+
+        System.out.println(idString);
+        int idInvoice = Integer.parseInt(idString.replace("=", ""));
+        System.out.println(idInvoice);
+
         try {
-            invoiceManager.deleteInvoice(id_invoice);
+            invoiceManager.deleteInvoice(idInvoice);
             return new ResponseEntity(HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
@@ -128,7 +134,6 @@ public class MainController {
     }
 
     /* COMMENTS */
-
 
     @RequestMapping(value = "/comments", method = RequestMethod.GET)
     public ResponseEntity getComments(){

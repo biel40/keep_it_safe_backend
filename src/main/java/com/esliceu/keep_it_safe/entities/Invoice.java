@@ -12,7 +12,7 @@ public class Invoice {
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long invoice_id;
+    private int invoice_id;
 
     @Column(nullable = false)
     private double total_price;
@@ -33,7 +33,6 @@ public class Invoice {
     private boolean isVerified;
 
     @ManyToMany
-
     @JoinTable(name = "invoice_luggage",
             joinColumns = @JoinColumn(name = "invoice_id"),
             inverseJoinColumns = @JoinColumn(name = "luggage_id"))
@@ -47,7 +46,7 @@ public class Invoice {
         return invoice_id;
     }
 
-    public void setInvoice_id(long invoice_id) {
+    public void setInvoice_id(int invoice_id) {
         this.invoice_id = invoice_id;
     }
 

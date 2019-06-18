@@ -131,7 +131,7 @@ public class MockDatabase {
         invoice_2.setEnd_date(this.addDay(currentTime, -15));
         invoice_2.setVerified(false);
         invoiceRepository.save(invoice_2);
-        invoice_2.setUser(client_1);
+        invoice_2.setUser(client_2);
         luggages.add(mediumLuggage);
         luggages.add(mediumLuggage);
         luggages.add(bigLuggage);
