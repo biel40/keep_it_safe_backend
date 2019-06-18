@@ -30,7 +30,7 @@ public class Invoice {
     private Calendar end_date;
 
     @Column(nullable = false)
-    private boolean isVerified;
+    private boolean verified;
 
     @ManyToMany
     @JoinTable(name = "invoice_luggage",
@@ -75,11 +75,11 @@ public class Invoice {
     }
 
     public boolean isVerified() {
-        return isVerified;
+        return verified;
     }
 
     public void setVerified(boolean verified) {
-        isVerified = verified;
+        this.verified = verified;
     }
 
     public List<Luggage> getLuggages() {
@@ -104,7 +104,7 @@ public class Invoice {
                 " \"end_date\": \"" + this.end_date.toInstant()+"\", " +
                 "\"start_date\":" + " \"" + this.start_date.toInstant()+"\", " +
                 "\"user\":" + this.user.stringToJSON() + "," +
-                "\"isVerified\":" + this.isVerified + "," +
+                "\"verified\":" + this.verified + "," +
                 "\"luggages\":" + this.getJsonFormatLuggages() + "}";
     }
 

@@ -4,6 +4,8 @@ import com.esliceu.keep_it_safe.entities.Comment;
 import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.Luggage;
 import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.exception.NoStockException;
+import com.esliceu.keep_it_safe.exception.StockOverflowException;
 import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
 import com.esliceu.keep_it_safe.managers.entities.UserManager;
@@ -106,18 +108,22 @@ public class MainController {
 
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
-
+        System.out.println("Está verificada ?? "+invoice.stringToJSON());
         User user = userManager.getUserByEmail(invoice.getUser().getEmail());
         if (user == null) {
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
 
-        invoiceManager.saveInvoice(invoice);
-        return new ResponseEntity(HttpStatus.OK);
+        try {
+            invoiceManager.saveInvoice(invoice);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (NoStockException e) {
+            return new ResponseEntity<>(e.toString(),HttpStatus.CONFLICT);
+        }
     }
 
-    @RequestMapping(value = "/deleteInvoice", method = RequestMethod.POST)
-    public ResponseEntity deleteInvoice(@RequestBody String idString){
+    @RequestMapping(value = "/invoice/{idString}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteInvoice(@PathVariable String idString){
 
 
         System.out.println(idString);
@@ -127,9 +133,9 @@ public class MainController {
         try {
             invoiceManager.deleteInvoice(idInvoice);
             return new ResponseEntity(HttpStatus.OK);
-        } catch (Exception e){
+        } catch (StockOverflowException e){
             e.printStackTrace();
-            return new ResponseEntity(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(e.toString(),HttpStatus.CONFLICT);
         }
     }
 

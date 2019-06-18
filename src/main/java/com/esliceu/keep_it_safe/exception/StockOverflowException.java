@@ -3,10 +3,10 @@ package com.esliceu.keep_it_safe.exception;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class NoStockException extends RuntimeException{
+public class StockOverflowException extends RuntimeException{
     private Date day;
 
-    public NoStockException(Date day) {
+    public StockOverflowException(Date day) {
         this.day =  day;
     }
 
@@ -17,6 +17,7 @@ public class NoStockException extends RuntimeException{
         String dateString = format.format( this.day);
 
 
-        return "No hay suficiente stock en la fecha " + dateString;
+        return "Erro al restaurar stock, demasiado stock para añadir en el día " + dateString;
     }
+
 }
