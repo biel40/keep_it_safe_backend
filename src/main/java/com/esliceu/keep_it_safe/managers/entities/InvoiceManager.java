@@ -72,7 +72,7 @@ public class InvoiceManager {
     public List<Invoice> getInvoicesByUser(User user) {
 
         //Hacer una busqueda de las invoices por la id del usuario.
-        return this.invoiceRepository.findByuser_userId(user.getUser_id());
+        return this.invoiceRepository.findByuser_userId(user.getUserId());
 
     }
 }

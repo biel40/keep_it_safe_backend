@@ -30,7 +30,7 @@ public class JsonManager {
         String imageUrl = googleUser.get("image").getAsJsonObject().get("url").toString().replace("\"", "");
 
         System.out.println(email);
-        return this.createUser(email, name, surnames, imageUrl);
+        return this.createUser(email, name, surnames, imageUrl, true);
 
     }
 
@@ -39,7 +39,7 @@ public class JsonManager {
         return user;
     }
 
-    private User createUser (String email, String name, String surnames, String imageUrl) {
+    private User createUser (String email, String name, String surnames, String imageUrl, boolean isLoginSocial) {
 
         User user = context.getBean(User.class);
         user.setEmail(email);
@@ -47,6 +47,7 @@ public class JsonManager {
         user.setSurnames(surnames);
         user.setRol_user(RolUser.CLIENT);
         user.setImageUrl(imageUrl);
+        user.setUserLoginSocial(isLoginSocial);
 
         return user;
     }

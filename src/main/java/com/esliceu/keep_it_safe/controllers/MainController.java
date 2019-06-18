@@ -95,14 +95,10 @@ public class MainController {
     }
 
 
-    @RequestMapping(value = "/invoice/user/notVerified", method = RequestMethod.GET)
-    public String getClientReservations(@RequestParam String string) {
+    @RequestMapping(value = "/invoice/user/notVerified/{userID}", method = RequestMethod.GET)
+    public String getClientReservations(@PathVariable long userID) {
 
-        System.out.println(string);
-
-        Gson gson = new Gson();
-        User user = gson.fromJson(string, User.class);
-
+        User user = userManager.getUserByID(userID);
 
         List<Invoice> allInvoicesFromClient = this.invoiceManager.getInvoicesByUser(user);
         List<Invoice> filteredInvoices = new LinkedList<>();
@@ -192,11 +188,24 @@ public class MainController {
         }
     }
 
+    /* USERS */
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public ResponseEntity registerUser(@RequestBody User user) {
         try {
             userManager.saveUser(user);
             return new ResponseEntity(HttpStatus.CREATED);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
+
+    @RequestMapping(value = "/user", method = RequestMethod.PUT)
+    public ResponseEntity editUser(@RequestBody User user) {
+        try {
+            String[] tokens = userManager.updateUser(user);
+            return new ResponseEntity<>(tokens,HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity(HttpStatus.CONFLICT);
