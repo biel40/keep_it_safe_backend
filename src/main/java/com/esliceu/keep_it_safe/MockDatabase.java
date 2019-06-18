@@ -45,7 +45,7 @@ public class MockDatabase {
         User client_1 = context.getBean(User.class);
         client_1.setName("Client");
         client_1.setSurnames("Client 1");
-        client_1.setPassword("client");
+        client_1.setPassword("client1234");
         client_1.setEmail("client_1@gmail.com");
         client_1.setRol_user(RolUser.CLIENT);
         userRepository.save(client_1);
@@ -53,7 +53,7 @@ public class MockDatabase {
         User client_2 = context.getBean(User.class);
         client_2.setName("Client");
         client_2.setSurnames("Client_2");
-        client_2.setPassword("client");
+        client_2.setPassword("client1234");
         client_2.setEmail("client_2@gmail.com");
         client_2.setRol_user(RolUser.CLIENT);
         userRepository.save(client_2);
@@ -62,7 +62,7 @@ public class MockDatabase {
         employee.setName("Employee");
         employee.setSurnames("Employee");
         employee.setRol_user(RolUser.EMPLOYEE);
-        employee.setPassword("employee");
+        employee.setPassword("employee1234");
         employee.setEmail("employee@gmail.com");
         userRepository.save(employee);
 
@@ -70,7 +70,7 @@ public class MockDatabase {
         admin.setName("admin");
         admin.setSurnames("sudo su");
         admin.setRol_user(RolUser.ADMIN);
-        admin.setPassword("admin");
+        admin.setPassword("admin1234");
         admin.setEmail("admin@gmail.com");
         userRepository.save(admin);
 

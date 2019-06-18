@@ -121,10 +121,7 @@ public class MainController {
     @RequestMapping(value = "/invoice/{idString}", method = RequestMethod.DELETE)
     public ResponseEntity deleteInvoice(@PathVariable String idString){
 
-
-        System.out.println(idString);
         int idInvoice = Integer.parseInt(idString.replace("=", ""));
-        System.out.println(idInvoice);
 
         try {
             invoiceManager.deleteInvoice(idInvoice);
@@ -184,22 +181,32 @@ public class MainController {
             userManager.saveUser(user);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e);
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
     }
 
 
-    @RequestMapping(value = "/user", method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/profile", method = RequestMethod.PUT)
     public ResponseEntity editUser(@RequestBody User user) {
         try {
             String[] tokens = userManager.updateUser(user);
             return new ResponseEntity<>(tokens,HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e);
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
     }
 
-
+    @RequestMapping(value = "/user/password", method = RequestMethod.PUT)
+    public ResponseEntity editPassword(@RequestBody String[] data) {
+        try {
+            String[] tokens = userManager.updatePassword(data);
+            if (tokens !=  null) {
+                return new ResponseEntity<>(tokens,HttpStatus.OK);
+            } else {
+                return new ResponseEntity(HttpStatus.CONFLICT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
 }

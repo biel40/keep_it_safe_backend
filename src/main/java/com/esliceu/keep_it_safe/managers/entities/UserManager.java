@@ -47,16 +47,45 @@ public class UserManager {
       }
     }
 
-    public String[] updateUser(User userToUpdate ) {
+    public String[] updateUser(User userToUpdate ) throws Exception{
 
-        User user = userRepository.findAllByUserId(userToUpdate.getUserId());
-        user.setName(userToUpdate.getName());
-        user.setSurnames(userToUpdate.getSurnames());
-        user.setEmail(userToUpdate.getEmail());
-        userRepository.save(user);
+        try {
+            User user = userRepository.findAllByUserId(userToUpdate.getUserId());
+            user.setName(userToUpdate.getName());
+            user.setSurnames(userToUpdate.getSurnames());
+            user.setEmail(userToUpdate.getEmail());
+            userRepository.save(user);
 
-        String token  = this.tokenManager.getJWTToken(user);
+            String token  = this.tokenManager.getJWTToken(user);
 
-        return this.tokenManager.validateToken(token);
+            return this.tokenManager.validateToken(token);
+        } catch (RuntimeException e) {
+            throw new Exception(e);
+        }
+
+
+    }
+
+    public String[] updatePassword(String[] data) throws Exception{
+        try {
+            long idUser =  Long.parseLong(data[0]);
+            String oldPassword = data[1];
+            String newPassword =  data[2];
+
+            User user = userRepository.findAllByUserId(idUser);
+
+            if(user.getPassword().equals(oldPassword)) {
+                user.setPassword(newPassword);
+                userRepository.save(user);
+
+                String token  = this.tokenManager.getJWTToken(user);
+
+                return this.tokenManager.validateToken(token);
+            } else {
+                return  null;
+            }
+        } catch (RuntimeException e) {
+            throw new Exception(e);
+        }
     }
 }
