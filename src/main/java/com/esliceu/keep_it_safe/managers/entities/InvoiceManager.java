@@ -4,8 +4,6 @@ import com.esliceu.keep_it_safe.entities.Invoice;
 import com.esliceu.keep_it_safe.entities.User;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import org.springframework.stereotype.Component;
-
-import javax.management.Query;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,8 +47,16 @@ public class InvoiceManager {
     }
 
     public void deleteInvoice(int id_invoice) {
-        Optional<Invoice> invoice = invoiceRepository.findById(id_invoice);
-        invoiceRepository.delete(invoice.get());
+
+
+        Optional<Invoice> invoiceOptional = invoiceRepository.findById(id_invoice);
+
+        Invoice invoice = invoiceOptional.get();
+
+        invoice.setUser(null);
+        invoiceRepository.save(invoice);
+
+        invoiceRepository.delete(invoice);
     }
 
 
