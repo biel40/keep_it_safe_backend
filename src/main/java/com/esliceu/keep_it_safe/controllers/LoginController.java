@@ -30,16 +30,12 @@ import java.net.URL;
 @RestController
 public class LoginController {
 
-    private String clientId = "637594007727-3o8tnk0vhafhh7o0p3hk5tib3q5rudk6.apps.googleusercontent.com";
-
-    private String secretId = "kgEDC-HtqsjxQZi6Jv-kYivr";
-
     @Value("${jwt.key}")
     private String SECRET_KEY;
 
     private UserRepository userRepository;
     private TokenManager tokenManager;
-    private OAuth2ConnectionFactory<Google> factory = new GoogleConnectionFactory(clientId, secretId);
+    private OAuth2ConnectionFactory<Google> factory = new GoogleConnectionFactory(Constants.GOOGLE_CLIENT_ID, Constants.GOOGLE_SECRET_ID);
     private JsonManager jsonManager;
     private UserManager userManager;
 
