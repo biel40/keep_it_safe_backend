@@ -3,6 +3,7 @@ package com.esliceu.keep_it_safe.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -12,16 +13,19 @@ public class Stock {
     @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
-    Date day;
+    Calendar day;
 
     @Column(nullable = false)
     int stock;
 
-    public Date getDay() {
+    @Column(nullable = false)
+    int currentStock;
+
+    public Calendar getDay() {
         return day;
     }
 
-    public void setDay(Date day) {
+    public void setDay(Calendar day) {
         this.day = day;
     }
 
@@ -41,6 +45,4 @@ public class Stock {
         this.currentStock = currentStock;
     }
 
-    @Column(nullable = false)
-    int currentStock;
 }

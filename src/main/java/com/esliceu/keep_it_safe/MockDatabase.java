@@ -1,6 +1,7 @@
 package com.esliceu.keep_it_safe;
 
 import com.esliceu.keep_it_safe.entities.*;
+import com.esliceu.keep_it_safe.exception.NoStockException;
 import com.esliceu.keep_it_safe.managers.entities.StockManager;
 import com.esliceu.keep_it_safe.repository.CommentRepository;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
@@ -100,19 +101,11 @@ public class MockDatabase {
 
         List<Luggage> luggages = new ArrayList<>();
 
-        Calendar calendarCurrentTime = Calendar.getInstance();
-        Date currentTime = Date.from(Instant.now());
-
 
         Invoice invoice_1 = context.getBean(Invoice.class);
         invoice_1.setTotal_price(12.6);
-        invoice_1.setStart_date(calendarCurrentTime);
-
-        Calendar end_day = this.addDay(currentTime, 10);
-
-        this.stockManager.checkStock(calendarCurrentTime, end_day);
-
-        invoice_1.setEnd_date(end_day);
+        invoice_1.setStart_date(this.addDay2(Calendar.getInstance(), 0));
+        invoice_1.setEnd_date(this.addDay2(Calendar.getInstance(), 10));
         invoice_1.setVerified(true);
         invoiceRepository.save(invoice_1);
         invoice_1.setUser(client_1);
@@ -123,12 +116,19 @@ public class MockDatabase {
         invoice_1.setLuggages(luggages);
         invoiceRepository.save(invoice_1);
 
+        try {
+            this.stockManager.checkStock(invoice_1);
+        } catch (NoStockException e) {
+            System.out.println(e);
+        }
+
+
         luggages.clear();
 
         Invoice invoice_2 = context.getBean(Invoice.class);
         invoice_2.setTotal_price(20.64);
-        invoice_2.setStart_date(calendarCurrentTime);
-        invoice_2.setEnd_date(this.addDay(currentTime, -15));
+        invoice_2.setStart_date(this.addDay2(Calendar.getInstance(), -15));
+        invoice_2.setEnd_date(this.addDay2(Calendar.getInstance(), 0));
         invoice_2.setVerified(false);
         invoiceRepository.save(invoice_2);
         invoice_2.setUser(client_1);
@@ -138,12 +138,19 @@ public class MockDatabase {
         invoice_2.setLuggages(luggages);
         invoiceRepository.save(invoice_2);
 
+
+        try {
+            this.stockManager.checkStock(invoice_2);
+        } catch (NoStockException e) {
+            System.out.println(e);
+        }
+
         luggages.clear();
 
         Invoice invoice_3 = context.getBean(Invoice.class);
         invoice_3.setTotal_price(32.96);
-        invoice_3.setStart_date(calendarCurrentTime);
-        invoice_3.setEnd_date(this.addDay(currentTime, 2));
+        invoice_3.setStart_date(this.addDay2(Calendar.getInstance(), 0));
+        invoice_3.setEnd_date(this.addDay2(Calendar.getInstance(), 2));
         invoice_3.setVerified(true);
         invoiceRepository.save(invoice_3);
         invoice_3.setUser(client_2);
@@ -154,6 +161,11 @@ public class MockDatabase {
         invoice_3.setLuggages(luggages);
         invoiceRepository.save(invoice_3);
 
+        try {
+            this.stockManager.checkStock(invoice_3);
+        } catch (NoStockException e) {
+            System.out.println(e);
+        }
 
         Comment comment1 = context.getBean(Comment.class);
         comment1.setComment_text("HOLA SOY UN PUTO COMENTARIO");
@@ -187,5 +199,13 @@ public class MockDatabase {
         cal.setTime(date);
         cal.add(Calendar.DATE, days); //minus number would decrement the days
         return cal;
+    }
+
+
+    private Calendar addDay2(Calendar cal, int days) {
+        cal.add(Calendar.DATE, days);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(cal.getTime());
+        return calendar;
     }
 }
