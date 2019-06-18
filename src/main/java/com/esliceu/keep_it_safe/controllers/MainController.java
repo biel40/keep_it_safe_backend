@@ -8,6 +8,7 @@ import com.esliceu.keep_it_safe.exception.NoStockException;
 import com.esliceu.keep_it_safe.exception.StockOverflowException;
 import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
+import com.esliceu.keep_it_safe.managers.entities.LuggageManager;
 import com.esliceu.keep_it_safe.managers.entities.UserManager;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import com.google.gson.Gson;
@@ -24,13 +25,13 @@ import java.util.List;
 public class MainController {
 
     private final InvoiceManager invoiceManager;
-    private final LuggageRepository luggageRepository;
+    private final LuggageManager luggageManager;
     private final UserManager userManager;
     private final CommentManager commentManager;
 
     @Autowired
-    public MainController(LuggageRepository luggageRepository, UserManager userManager, InvoiceManager invoiceManager, CommentManager commentManager) {
-        this.luggageRepository = luggageRepository;
+    public MainController(LuggageManager luggageManager, UserManager userManager, InvoiceManager invoiceManager, CommentManager commentManager) {
+        this.luggageManager = luggageManager;
         this.userManager = userManager;
         this.invoiceManager = invoiceManager;
         this.commentManager = commentManager;
@@ -40,7 +41,7 @@ public class MainController {
 
     @RequestMapping(value = "/luggages", method = RequestMethod.GET)
     public List<Luggage> getLuggages() {
-        return (List<Luggage>) this.luggageRepository.findAll();
+        return (List<Luggage>) luggageManager.findAllLuggages();
     }
 
     @RequestMapping(value = "/luggages", method = RequestMethod.POST)
@@ -51,7 +52,7 @@ public class MainController {
     @RequestMapping(value = "/luggages/price", method = RequestMethod.PUT)
     public ResponseEntity changePrices(@RequestBody List<Luggage> luggages){
         try {
-            luggageRepository.saveAll(luggages);
+            luggageManager.saveAllLuggages(luggages);
             return new ResponseEntity(HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity(HttpStatus.CONFLICT);
@@ -81,6 +82,16 @@ public class MainController {
             }
         }
         return invoiceManager.invoicesToJSON(currentInvoices);
+    }
+
+    @RequestMapping(value = "/invoices/edit", method = RequestMethod.PUT)
+    public ResponseEntity updateInvoice(@RequestBody Invoice invoice) {
+        try {
+            invoiceManager.saveInvoice(invoice);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch(Exception e) {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
     }
 
 
