@@ -23,6 +23,7 @@ public class User {
     private String name;
     private String surnames;
     private String imageUrl;
+    private boolean userLoginSocial;
 
     @OneToMany(mappedBy = "user")
     private Set<Invoice> invoices;
@@ -30,9 +31,15 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Comment> comments;
 
-    public long getUser_id() { return userId; }
+    public long getUserId() { return userId; }
 
-    public void setUser_id(long user_id) { this.userId = user_id; }
+    public void setUserId(long userId) { this.userId = userId; }
+
+    public boolean isUserLoginSocial() { return userLoginSocial; }
+
+    public void setUserLoginSocial(boolean userLoginSocial) {
+        this.userLoginSocial = userLoginSocial;
+    }
 
     public String getEmail() {
         return email;

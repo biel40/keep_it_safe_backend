@@ -28,12 +28,13 @@ public class TokenManager {
 
         String token = Jwts
                 .builder()
-                .claim("userId", user.getUser_id())
+                .claim("userId", user.getUserId())
                 .claim("email", user.getEmail())
                 .claim("rol_user", user.getRol_user())
                 .claim("name", user.getName())
                 .claim("surnames", user.getSurnames())
                 .claim("imageUrl", user.getImageUrl())
+                .claim("userLoginSocial",user.isUserLoginSocial())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();
@@ -56,7 +57,7 @@ public class TokenManager {
                 claims.setExpiration(date);
 
                 String userInfoJson = new Gson().toJson(claims);
-
+                System.out.println("JSON LOGIN -> " + userInfoJson);
                 return new String[]{userInfoJson, this.refreshToken(claims)};
 
             } else  {
@@ -99,6 +100,7 @@ public class TokenManager {
                 .claim("name", claims.get("name"))
                 .claim("surnames", claims.get("surnames"))
                 .claim("imageUrl", claims.get("imageUrl"))
+                .claim("userLoginSocial",claims.get("userLoginSocial"))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + Constants.EXPIRATION_TOKEN))
                 .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(SECRET_KEY)).compact();

@@ -108,7 +108,7 @@ public class LoginController {
             response.sendRedirect( Constants.FRONTEND_URL + "?token=" + jwt);
 
         } else {
-            response.sendRedirect(request.getHeader("referer"));
+            response.sendRedirect(Constants.FRONTEND_URL);
         }
     }
 
