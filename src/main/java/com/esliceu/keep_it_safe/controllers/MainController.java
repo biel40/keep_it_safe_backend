@@ -77,7 +77,8 @@ public class MainController {
 
         for (Invoice invoice : allInvoices ) {
             // Miramos que la fecha en la que acaba la factura NO sea inferior a la actual.
-            if (invoice.getEnd_date().after(now)){
+            if (invoice.getEnd_date().after(now) ||  invoice.getEnd_date().get(Calendar.YEAR) == now.get(Calendar.YEAR) &&
+                    invoice.getEnd_date().get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR) && invoice.getEnd_date().get(Calendar.MONTH) ==  now.get(Calendar.MONTH)){
                 currentInvoices.add(invoice);
             }
         }
@@ -87,7 +88,7 @@ public class MainController {
     @RequestMapping(value = "/invoices/edit", method = RequestMethod.PUT)
     public ResponseEntity updateInvoice(@RequestBody Invoice invoice) {
         try {
-            invoiceManager.saveInvoice(invoice);
+            invoiceManager.editInvoice(invoice);
             return new ResponseEntity(HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity(HttpStatus.CONFLICT);

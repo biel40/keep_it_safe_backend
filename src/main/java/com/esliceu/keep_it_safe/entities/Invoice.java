@@ -42,7 +42,7 @@ public class Invoice {
     @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 
-    public long getInvoice_id() {
+    public int getInvoice_id() {
         return invoice_id;
     }
 

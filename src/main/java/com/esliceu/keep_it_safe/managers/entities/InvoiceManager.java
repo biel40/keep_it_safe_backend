@@ -54,6 +54,16 @@ public class InvoiceManager {
         invoiceRepository.save(invoice);
     }
 
+    public void editInvoice (Invoice invoice) throws RuntimeException {
+        Invoice invoiceInDB =  this.getInvoiceById(invoice.getInvoice_id());
+
+        stockManager.restoreStock(invoiceInDB);
+        stockManager.checkStock(invoice);
+        User user = userManager.getUserByEmail(invoice.getUser().getEmail());
+        invoice.setUser(user);
+        invoiceRepository.save(invoice);
+    }
+
     public void deleteInvoice(int id_invoice) throws StockOverflowException {
 
         Optional<Invoice> invoiceOptional = invoiceRepository.findById(id_invoice);

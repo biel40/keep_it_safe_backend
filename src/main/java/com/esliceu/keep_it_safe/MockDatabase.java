@@ -127,7 +127,7 @@ public class MockDatabase {
         Invoice invoice_2 = context.getBean(Invoice.class);
         invoice_2.setTotal_price(20.64);
         invoice_2.setStart_date(this.addDay2(Calendar.getInstance(), -15));
-        invoice_2.setEnd_date(this.addDay2(Calendar.getInstance(), 0));
+        invoice_2.setEnd_date(this.addDay2(Calendar.getInstance(), -5));
         invoice_2.setVerified(false);
         invoiceRepository.save(invoice_2);
         invoice_2.setUser(client_2);
