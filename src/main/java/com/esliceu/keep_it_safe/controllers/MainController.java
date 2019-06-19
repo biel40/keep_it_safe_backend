@@ -125,7 +125,7 @@ public class MainController {
     }
 
 
-    @RequestMapping(value = "/invoices/id/{invoiceId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/invoice/id/{invoiceId}", method = RequestMethod.GET)
     public String getInvoiceToCheck(@PathVariable int invoiceId) {
         return  invoiceManager.getInvoiceById(invoiceId).stringToJSON();
     }
