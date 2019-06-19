@@ -54,13 +54,13 @@ public class InvoiceManager {
         invoiceRepository.save(invoice);
     }
 
-    public void editInvoice(Invoice invoice) throws NoStockException {
+    public void editInvoice (Invoice invoice) throws RuntimeException {
+        Invoice invoiceInDB =  this.getInvoiceById(invoice.getInvoice_id());
 
+        stockManager.restoreStock(invoiceInDB);
+        stockManager.checkStock(invoice);
         User user = userManager.getUserByEmail(invoice.getUser().getEmail());
         invoice.setUser(user);
-
-        stockManager.recalculateStock(invoice);
-
         invoiceRepository.save(invoice);
     }
 

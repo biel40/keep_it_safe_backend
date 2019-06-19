@@ -10,8 +10,6 @@ import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
 import com.esliceu.keep_it_safe.managers.entities.LuggageManager;
 import com.esliceu.keep_it_safe.managers.entities.UserManager;
-import com.esliceu.keep_it_safe.repository.LuggageRepository;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,7 +75,8 @@ public class MainController {
 
         for (Invoice invoice : allInvoices ) {
             // Miramos que la fecha en la que acaba la factura NO sea inferior a la actual.
-            if (invoice.getEnd_date().after(now)){
+            if (invoice.getEnd_date().after(now) ||  invoice.getEnd_date().get(Calendar.YEAR) == now.get(Calendar.YEAR) &&
+                    invoice.getEnd_date().get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR) && invoice.getEnd_date().get(Calendar.MONTH) ==  now.get(Calendar.MONTH)){
                 currentInvoices.add(invoice);
             }
         }
@@ -97,7 +96,9 @@ public class MainController {
             invoiceToEdit.setTotal_price(invoice.getTotal_price());
             invoiceToEdit.setLuggages(invoice.getLuggages());
 
-            invoiceManager.saveInvoice(invoiceToEdit);
+
+            invoiceManager.editInvoice(invoice);
+
             return new ResponseEntity(HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity(HttpStatus.CONFLICT);
@@ -153,17 +154,13 @@ public class MainController {
         }
     }
 
-    @RequestMapping(value = "/invoice/{idString}", method = RequestMethod.PUT)
-    public ResponseEntity validateInvoice(@PathVariable String idString){
-
-        int idInvoice = Integer.parseInt(idString.replace("=", ""));
+    @RequestMapping(value = "/invoice/validate/", method = RequestMethod.PUT)
+    public ResponseEntity validateInvoice(@RequestBody Invoice invoice){
 
         try {
 
-            Invoice invoiceToEdit = invoiceManager.getInvoiceById(idInvoice);
-
+            Invoice invoiceToEdit = invoiceManager.getInvoiceById(invoice.getInvoice_id());
             invoiceToEdit.setVerified(true);
-
             invoiceManager.saveInvoice(invoiceToEdit);
 
             return new ResponseEntity(HttpStatus.OK);
@@ -172,7 +169,6 @@ public class MainController {
             return new ResponseEntity<>(e.toString(),HttpStatus.CONFLICT);
         }
     }
-
 
 
     /* COMMENTS */
