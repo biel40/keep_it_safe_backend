@@ -73,9 +73,9 @@ public class StockManager {
         start.setTime(invoice.getStart_date().getTime());
 
         long dateDiff = this.getDayDiff(invoice);
-        System.out.println("Dia de diferencia "+ dateDiff);
+
         for (int i = 0; i <= dateDiff; i++) {
-            System.out.println("Ha entrado");
+
             Stock stock = stockRepository.findByDay(start);
             int currentStock = stock.getCurrentStock();
             int stockInINvoice = invoice.getLuggages().size();
