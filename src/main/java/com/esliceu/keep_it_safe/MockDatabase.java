@@ -167,7 +167,7 @@ public class MockDatabase {
         }
 
         Comment comment1 = context.getBean(Comment.class);
-        comment1.setComment_text("HOLA SOY UN PUTO COMENTARIO");
+        comment1.setComment_text("Muy satisfecho con la rápidez del servicio. Recomendada!!");
         commentRepository.save(comment1);
         comment1.setUser(client_1);
         commentRepository.save(comment1);
@@ -180,14 +180,14 @@ public class MockDatabase {
         commentRepository.save(comment2);
 
         Comment comment3 = context.getBean(Comment.class);
-        comment3.setComment_text("Hola k ase premoh");
+        comment3.setComment_text("Los precios son un poco caros...pero la asisténcia es rápida y eficiente.");
         commentRepository.save(comment3);
         comment3.setUser(client_1);
         commentRepository.save(comment3);
 
         // Comentario sin usuario para probar.
         Comment comment4 = context.getBean(Comment.class);
-        comment4.setComment_text("COMENTARIO SIN USUARIO XD");
+        comment4.setComment_text("Una aplicación absolutamente sorprendente para una empresa absolutamente sorprendente!");
         commentRepository.save(comment4);
 
 
