@@ -31,6 +31,7 @@ public class StockManager {
 
     @Transactional
     public boolean checkStock(Invoice invoice) throws NoStockException {
+
         Calendar start = Calendar.getInstance();
 
         start.setTime(invoice.getStart_date().getTime());
@@ -41,12 +42,9 @@ public class StockManager {
 
         long dateDiff = this.getDayDiff(invoice);
 
-        System.out.println("DIA DE DIFERENCIAS: " + dateDiff);
-
         for (int i = 0; i <= dateDiff; i++) {
 
             Stock stock = stockRepository.findByDay(start);
-
 
             if (stock == null) {
                 this.createStock(start.getTime(), invoice);
@@ -66,8 +64,9 @@ public class StockManager {
 
         return true;
     }
+
     @Transactional
-    public void restoreStock(Invoice invoice)  throws StockOverflowException {
+    public void restoreStock(Invoice invoice) throws StockOverflowException {
 
         Calendar start = Calendar.getInstance();
 
@@ -90,7 +89,6 @@ public class StockManager {
 
             this.addDayOneDay(start);
         }
-
 
     }
 
@@ -119,4 +117,9 @@ public class StockManager {
         calendar.add(Calendar.DATE, 1);
         return calendar;
     }
+
+    public void recalculateStock(Invoice invoice) {
+
+    }
+
 }
