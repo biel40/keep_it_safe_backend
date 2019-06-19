@@ -10,8 +10,6 @@ import com.esliceu.keep_it_safe.managers.entities.CommentManager;
 import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
 import com.esliceu.keep_it_safe.managers.entities.LuggageManager;
 import com.esliceu.keep_it_safe.managers.entities.UserManager;
-import com.esliceu.keep_it_safe.repository.LuggageRepository;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -88,7 +86,19 @@ public class MainController {
     @RequestMapping(value = "/invoices/edit", method = RequestMethod.PUT)
     public ResponseEntity updateInvoice(@RequestBody Invoice invoice) {
         try {
+
+            Invoice invoiceToEdit = invoiceManager.getInvoiceById((int) invoice.getInvoice_id());
+
+            invoiceToEdit.setInvoice_id((int) invoice.getInvoice_id());
+            invoiceToEdit.setVerified(invoice.isVerified());
+            invoiceToEdit.setStart_date(invoice.getStart_date());
+            invoiceToEdit.setEnd_date(invoice.getEnd_date());
+            invoiceToEdit.setTotal_price(invoice.getTotal_price());
+            invoiceToEdit.setLuggages(invoice.getLuggages());
+
+
             invoiceManager.editInvoice(invoice);
+
             return new ResponseEntity(HttpStatus.OK);
         } catch(Exception e) {
             return new ResponseEntity(HttpStatus.CONFLICT);
@@ -122,7 +132,7 @@ public class MainController {
 
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
-        System.out.println("Está verificada ?? "+invoice.stringToJSON());
+
         User user = userManager.getUserByEmail(invoice.getUser().getEmail());
         if (user == null) {
             return new ResponseEntity(HttpStatus.CONFLICT);
@@ -150,6 +160,23 @@ public class MainController {
         }
     }
 
+    @RequestMapping(value = "/invoice/validate/", method = RequestMethod.PUT)
+    public ResponseEntity validateInvoice(@RequestBody Invoice invoice){
+
+        try {
+
+            Invoice invoiceToEdit = invoiceManager.getInvoiceById(invoice.getInvoice_id());
+            invoiceToEdit.setVerified(true);
+            invoiceManager.saveInvoice(invoiceToEdit);
+
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (StockOverflowException e){
+
+            return new ResponseEntity<>(e.toString(),HttpStatus.CONFLICT);
+        }
+    }
+
+
     /* COMMENTS */
 
     @RequestMapping(value = "/comments", method = RequestMethod.GET)
@@ -170,7 +197,6 @@ public class MainController {
     public ResponseEntity insertComment(@RequestBody Comment comment) {
 
         try {
-            System.out.println("INSERTANDO COMENTARIO");
             User user = null;
 
             if(comment.getUser() != null){
@@ -227,4 +253,12 @@ public class MainController {
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
     }
+
+    @RequestMapping(value = "/user/email", method = RequestMethod.GET)
+    public User getUserByEmail(@RequestParam("email") String email) {
+        System.out.println(email);
+        return this.userManager.getUserByEmail(email);
+    }
+
+
 }
