@@ -194,9 +194,7 @@ public class MainController {
             User user = null;
 
             if(comment.getUser() != null){
-
                  user = userManager.getUserByEmail(comment.getUser().getEmail());
-                 System.out.println("Usuario");
             }
 
             if (user != null) {
@@ -250,7 +248,6 @@ public class MainController {
 
     @RequestMapping(value = "/user/email", method = RequestMethod.GET)
     public User getUserByEmail(@RequestParam("email") String email) {
-        System.out.println(email);
         return this.userManager.getUserByEmail(email);
     }
 

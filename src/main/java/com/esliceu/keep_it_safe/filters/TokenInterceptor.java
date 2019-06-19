@@ -28,8 +28,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
-        System.out.println("Backend interceptor!");
-
         try {
 
             String isTheRequest = request.getHeader(IS_THE_REQUEST);
@@ -42,8 +40,6 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
                     List<String> blackList = TokenManager.blackListToken;
 
                     String token = authenticationHeader.split(" ")[1];
-
-                    System.out.println(token);
 
                     if (blackList.contains(token)) {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

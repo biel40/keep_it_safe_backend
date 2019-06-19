@@ -47,7 +47,6 @@ public class InvoiceManager {
 
     public void saveInvoice (Invoice invoice) throws NoStockException {
 
-        System.out.println("THE INVOICE -->> "  + invoice.getStart_date().getTime() );
         User user = userManager.getUserByEmail(invoice.getUser().getEmail());
         invoice.setUser(user);
         stockManager.checkStock(invoice);

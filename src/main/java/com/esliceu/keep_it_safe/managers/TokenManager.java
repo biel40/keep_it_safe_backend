@@ -57,7 +57,7 @@ public class TokenManager {
                 claims.setExpiration(date);
 
                 String userInfoJson = new Gson().toJson(claims);
-                System.out.println("JSON LOGIN -> " + userInfoJson);
+
                 return new String[]{userInfoJson, this.refreshToken(claims)};
 
             } else  {
@@ -65,7 +65,6 @@ public class TokenManager {
             }
 
         } catch (io.jsonwebtoken.JwtException e) {
-            System.out.println(e);
             return null;
         }
     }
