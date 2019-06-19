@@ -124,6 +124,12 @@ public class MainController {
 
     }
 
+
+    @RequestMapping(value = "/invoice/id/{invoiceId}", method = RequestMethod.GET)
+    public String getInvoiceToCheck(@PathVariable int invoiceId) {
+        return  invoiceManager.getInvoiceById(invoiceId).stringToJSON();
+    }
+
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     public ResponseEntity saveInvoice(@RequestBody Invoice invoice) {
 
