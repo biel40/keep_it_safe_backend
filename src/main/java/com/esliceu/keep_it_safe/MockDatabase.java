@@ -1,8 +1,8 @@
 package com.esliceu.keep_it_safe;
 
-import com.esliceu.keep_it_safe.entities.*;
+import com.esliceu.keep_it_safe.entity.*;
 import com.esliceu.keep_it_safe.exception.NoStockException;
-import com.esliceu.keep_it_safe.managers.entities.StockManager;
+import com.esliceu.keep_it_safe.manager.entity.StockManager;
 import com.esliceu.keep_it_safe.repository.CommentRepository;
 import com.esliceu.keep_it_safe.repository.InvoiceRepository;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;

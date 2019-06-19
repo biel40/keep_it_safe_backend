@@ -1,15 +1,15 @@
-package com.esliceu.keep_it_safe.controllers;
+package com.esliceu.keep_it_safe.controller;
 
-import com.esliceu.keep_it_safe.entities.Comment;
-import com.esliceu.keep_it_safe.entities.Invoice;
-import com.esliceu.keep_it_safe.entities.Luggage;
-import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.entity.Comment;
+import com.esliceu.keep_it_safe.entity.Invoice;
+import com.esliceu.keep_it_safe.entity.Luggage;
+import com.esliceu.keep_it_safe.entity.User;
 import com.esliceu.keep_it_safe.exception.NoStockException;
 import com.esliceu.keep_it_safe.exception.StockOverflowException;
-import com.esliceu.keep_it_safe.managers.entities.CommentManager;
-import com.esliceu.keep_it_safe.managers.entities.InvoiceManager;
-import com.esliceu.keep_it_safe.managers.entities.LuggageManager;
-import com.esliceu.keep_it_safe.managers.entities.UserManager;
+import com.esliceu.keep_it_safe.manager.entity.CommentManager;
+import com.esliceu.keep_it_safe.manager.entity.InvoiceManager;
+import com.esliceu.keep_it_safe.manager.entity.LuggageManager;
+import com.esliceu.keep_it_safe.manager.entity.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

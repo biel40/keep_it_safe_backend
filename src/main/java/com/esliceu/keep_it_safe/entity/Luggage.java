@@ -1,8 +1,6 @@
-package com.esliceu.keep_it_safe.entities;
+package com.esliceu.keep_it_safe.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.Set;

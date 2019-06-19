@@ -1,10 +1,9 @@
-package com.esliceu.keep_it_safe.entities;
+package com.esliceu.keep_it_safe.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Calendar;
-import java.util.Date;
 
 @Entity
 public class Stock {

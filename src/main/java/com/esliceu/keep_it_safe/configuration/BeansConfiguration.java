@@ -1,6 +1,6 @@
 package com.esliceu.keep_it_safe.configuration;
 
-import com.esliceu.keep_it_safe.entities.*;
+import com.esliceu.keep_it_safe.entity.*;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

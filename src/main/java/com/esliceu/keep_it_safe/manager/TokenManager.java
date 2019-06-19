@@ -1,7 +1,7 @@
-package com.esliceu.keep_it_safe.managers;
+package com.esliceu.keep_it_safe.manager;
 
 import com.esliceu.keep_it_safe.Constants;
-import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.entity.User;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

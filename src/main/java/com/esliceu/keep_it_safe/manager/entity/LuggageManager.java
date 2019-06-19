@@ -1,6 +1,6 @@
-package com.esliceu.keep_it_safe.managers.entities;
+package com.esliceu.keep_it_safe.manager.entity;
 
-import com.esliceu.keep_it_safe.entities.Luggage;
+import com.esliceu.keep_it_safe.entity.Luggage;
 import com.esliceu.keep_it_safe.repository.LuggageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

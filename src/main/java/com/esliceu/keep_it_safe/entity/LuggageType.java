@@ -1,4 +1,4 @@
-package com.esliceu.keep_it_safe.entities;
+package com.esliceu.keep_it_safe.entity;
 
 public enum  LuggageType {
     SMALL, MEDIUM, BIG

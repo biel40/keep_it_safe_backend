@@ -1,7 +1,7 @@
-package com.esliceu.keep_it_safe.managers.entities;
+package com.esliceu.keep_it_safe.manager.entity;
 
-import com.esliceu.keep_it_safe.entities.Comment;
-import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.entity.Comment;
+import com.esliceu.keep_it_safe.entity.User;
 import com.esliceu.keep_it_safe.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

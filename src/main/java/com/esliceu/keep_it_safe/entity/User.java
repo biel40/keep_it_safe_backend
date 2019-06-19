@@ -1,4 +1,4 @@
-package com.esliceu.keep_it_safe.entities;
+package com.esliceu.keep_it_safe.entity;
 
 import javax.persistence.*;
 import java.util.Set;

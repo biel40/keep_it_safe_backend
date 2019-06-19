@@ -1,8 +1,8 @@
-package com.esliceu.keep_it_safe.managers.entities;
+package com.esliceu.keep_it_safe.manager.entity;
 
 import com.esliceu.keep_it_safe.Constants;
-import com.esliceu.keep_it_safe.entities.Invoice;
-import com.esliceu.keep_it_safe.entities.Stock;
+import com.esliceu.keep_it_safe.entity.Invoice;
+import com.esliceu.keep_it_safe.entity.Stock;
 import com.esliceu.keep_it_safe.exception.NoStockException;
 import com.esliceu.keep_it_safe.exception.StockOverflowException;
 import com.esliceu.keep_it_safe.repository.StockRepository;

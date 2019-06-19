@@ -1,7 +1,7 @@
-package com.esliceu.keep_it_safe.managers;
+package com.esliceu.keep_it_safe.manager;
 
-import com.esliceu.keep_it_safe.entities.RolUser;
-import com.esliceu.keep_it_safe.entities.User;
+import com.esliceu.keep_it_safe.entity.RolUser;
+import com.esliceu.keep_it_safe.entity.User;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;

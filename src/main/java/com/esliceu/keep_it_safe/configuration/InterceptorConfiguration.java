@@ -1,6 +1,6 @@
 package com.esliceu.keep_it_safe.configuration;
 
-import com.esliceu.keep_it_safe.filters.TokenInterceptor;
+import com.esliceu.keep_it_safe.filter.TokenInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;

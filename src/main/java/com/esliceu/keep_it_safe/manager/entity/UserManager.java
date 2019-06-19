@@ -1,13 +1,11 @@
-package com.esliceu.keep_it_safe.managers.entities;
+package com.esliceu.keep_it_safe.manager.entity;
 
-import com.esliceu.keep_it_safe.entities.Invoice;
-import com.esliceu.keep_it_safe.entities.User;
-import com.esliceu.keep_it_safe.managers.TokenManager;
+import com.esliceu.keep_it_safe.entity.Invoice;
+import com.esliceu.keep_it_safe.entity.User;
+import com.esliceu.keep_it_safe.manager.TokenManager;
 import com.esliceu.keep_it_safe.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 public class UserManager {
